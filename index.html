@@ -96,7 +96,19 @@
       document.getElementById("loginInfo").innerText = "✅ Login berjaya. Sila mula Unit 1.";
       document.getElementById("loginCard").classList.add("hidden");
       document.getElementById("unitArea").classList.remove("hidden");
-      showUnit(1);
+      const nama = infoMurid.nama;
+const email = infoMurid.email;
+const kelas = infoMurid.kelas;
+const sekolah = infoMurid.sekolah;
+
+const url = "unit1.html"
+  + "?nama=" + encodeURIComponent(nama)
+  + "&email=" + encodeURIComponent(email)
+  + "&kelas=" + encodeURIComponent(kelas)
+  + "&sekolah=" + encodeURIComponent(sekolah);
+
+window.location.href = url;
+
     }
 
     function showUnit(n){
@@ -182,3 +194,4 @@
   </script>
 </body>
 </html>
+
