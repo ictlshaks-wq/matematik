@@ -1,591 +1,512 @@
 <!DOCTYPE html>
 <html lang="ms">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulasi Susun Atur Meja: Edisi Ceria</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Fredoka', 'sans-serif'],
-                    },
-                    colors: {
-                        'anime-purple': '#8B5CF6',
-                        'anime-purple-light': '#A78BFA',
-                        'anime-pink': '#F472B6',
-                        'anime-blue': '#60A5FA',
-                        'anime-bg': '#F5F3FF',
-                    }
-                }
-            }
-        }
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulasi Susun Atur Meja: Edisi Ceria</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <style>
-        body {
-            background-color: #F5F3FF;
-            background-image: radial-gradient(#E0E7FF 2px, transparent 2px);
-            background-size: 24px 24px;
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Fredoka', 'sans-serif'] },
+          colors: {
+            'anime-purple': '#8B5CF6',
+            'anime-purple-light': '#A78BFA',
+            'anime-pink': '#F472B6',
+            'anime-blue': '#60A5FA',
+            'anime-bg': '#F5F3FF',
+          }
         }
+      }
+    }
+  </script>
 
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: #C4B5FD; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #A78BFA; }
+  <style>
+    body { background-color:#F5F3FF; background-image:radial-gradient(#E0E7FF 2px, transparent 2px); background-size:24px 24px; }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb { background: #C4B5FD; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #A78BFA; }
 
-        .wood-table {
-            background-color: #FBBF24;
-            border: 3px solid #D97706;
-            border-radius: 12px;
-            box-shadow: 0 4px 0 #B45309;
-            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
+    .wood-table { background-color:#FBBF24; border:3px solid #D97706; border-radius:12px; box-shadow:0 4px 0 #B45309; transition:all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .anime-chair { width:26px; height:26px; background-color:#60A5FA; border:2px solid #2563EB; border-radius:50%; position:absolute; z-index:10; box-shadow:0 3px 0 #1D4ED8; }
+    .table-unit-content { width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:#92400E; font-weight:700; font-size:14px; }
 
-        .anime-chair {
-            width: 26px;
-            height: 26px;
-            background-color: #60A5FA;
-            border: 2px solid #2563EB;
-            border-radius: 50%;
-            position: absolute;
-            z-index: 10;
-            box-shadow: 0 3px 0 #1D4ED8;
-        }
+    .btn-anime { transition: all 0.1s; border-bottom-width:4px; }
+    .btn-anime:active { transform: translateY(2px); border-bottom-width:0px; margin-top:4px; }
+    .btn-anime:disabled { opacity:0.5; cursor:not-allowed; transform:none; border-bottom-width:4px; }
 
-        .table-unit-content {
-            width: 100%; height: 100%;
-            display: flex; align-items: center; justify-content: center;
-            color: #92400E; font-weight: 700; font-size: 14px;
-        }
+    .btn-option { transition: all 0.2s ease; border: 2px solid #E5E7EB; }
+    .btn-option:hover { transform: translateY(-2px); border-color:#A78BFA; background-color:#F5F3FF; }
+    .btn-option.selected { background-color:#EDE9FE; border-color:#8B5CF6; color:#5B21B6; box-shadow:0 0 0 2px #8B5CF6; }
+    .btn-option.selected .option-label { background-color:#8B5CF6; color:white; border-color:#8B5CF6; }
 
-        .btn-anime {
-            transition: all 0.1s;
-            border-bottom-width: 4px;
-        }
-        .btn-anime:active {
-            transform: translateY(2px);
-            border-bottom-width: 0px;
-            margin-top: 4px;
-        }
-        .btn-anime:disabled {
-            opacity: 0.5; cursor: not-allowed; transform: none; border-bottom-width: 4px;
-        }
+    @keyframes bounceIn { 0%{transform:scale(0.3);opacity:0} 50%{transform:scale(1.05)} 70%{transform:scale(0.9)} 100%{transform:scale(1);opacity:1} }
+    .animate-pop { animation: bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
 
-        .btn-option {
-            transition: all 0.2s ease;
-            border: 2px solid #E5E7EB;
-        }
-        .btn-option:hover { transform: translateY(-2px); border-color: #A78BFA; background-color: #F5F3FF; }
-        .btn-option.selected { background-color: #EDE9FE; border-color: #8B5CF6; color: #5B21B6; box-shadow: 0 0 0 2px #8B5CF6; }
-        .btn-option.selected .option-label { background-color: #8B5CF6; color: white; border-color: #8B5CF6; }
+    .fade-in { animation: fadeIn 0.4s ease-in-out; }
+    @keyframes fadeIn { from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:translateY(0)} }
 
-        @keyframes bounceIn {
-            0% { transform: scale(0.3); opacity: 0; }
-            50% { transform: scale(1.05); }
-            70% { transform: scale(0.9); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        .animate-pop { animation: bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
-        .fade-in { animation: fadeIn 0.4s ease-in-out; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .progress-step { transition: all 0.3s ease; }
-        .progress-line { transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
-    </style>
+    .progress-step { transition: all 0.3s ease; }
+    .progress-line { transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+  </style>
 </head>
+
 <body class="font-sans text-gray-700 min-h-screen flex flex-col overflow-x-hidden">
 
-    <header class="bg-white border-b-4 border-anime-purple/20 py-3 px-4 sticky top-0 z-50 shadow-sm">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="bg-anime-purple text-white p-2 rounded-xl rotate-3 shadow-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                    </svg>
-                </div>
-                <div>
-                    <h1 class="text-xl md:text-2xl font-bold text-gray-800 leading-none">Unit 1: AJK PENYEDIAAN TEMPAT</h1>
-                    <p class="text-xs text-anime-purple font-medium bg-anime-purple/10 px-2 py-0.5 rounded-full inline-block mt-1">Math is Fun!</p>
-                </div>
-            </div>
-            
-            <button onclick="resetSim()" class="btn-anime bg-rose-400 hover:bg-rose-500 text-white border-rose-600 px-4 py-2 rounded-xl text-sm font-bold shadow-md flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-                <span class="hidden sm:inline">Mula Semula</span>
-            </button>
-        </div>
-    </header>
-
-    <div class="flex-grow max-w-7xl mx-auto w-full p-4 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        <div class="lg:col-span-7 flex flex-col gap-5">
-            <div class="bg-white p-5 rounded-3xl shadow-sm border-2 border-indigo-50 flex items-start gap-4 relative overflow-hidden group hover:border-anime-purple transition-colors">
-                <div class="absolute top-0 right-0 w-20 h-20 bg-anime-purple/5 rounded-bl-full -mr-4 -mt-4"></div>
-                <div class="bg-gradient-to-br from-indigo-400 to-purple-500 p-3 rounded-2xl text-white shadow-md shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                </div>
-                <div>
-                    <h3 class="font-bold text-gray-800 text-lg">Misi Anda: Ketua Dekorasi!</h3>
-                    <p class="text-gray-500 text-sm leading-relaxed mt-1">
-                        Sekolah akan mengadakan jamuan makan malam. Tugas anda adalah menentukan bilangan kerusi yang diperlukan apabila meja-meja disusun secara <strong>bersambung (memanjang)</strong> bagi menjimatkan ruang dewan.
-                    </p>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-3xl shadow-md border-2 border-gray-100 overflow-hidden flex flex-col relative h-[500px]">
-                <div class="bg-sky-50 px-5 py-3 border-b border-sky-100 flex items-center justify-between">
-                    <div class="flex items-center gap-2 text-sky-700 font-bold text-sm uppercase tracking-wide">
-                        Arahan: Seret atau klik meja untuk sambung
-                    </div>
-                </div>
-
-                <div id="simulation-area" class="flex-grow relative flex items-center justify-center bg-slate-50 overflow-hidden touch-none">
-                    <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#cbd5e1 2px, transparent 2px); background-size: 20px 20px;"></div>
-                    <div id="arrangement-container" class="relative h-60 w-full transition-all duration-300 z-10"></div>
-                    <div id="drop-indicator" class="hidden absolute w-24 h-20 border-4 border-dashed border-green-400 bg-green-50/50 rounded-2xl flex items-center justify-center text-green-600 font-bold animate-pulse z-0">Lepas!</div>
-                </div>
-
-                <div class="bg-white p-4 border-t border-gray-100 shadow-[0_-5px_20px_rgba(0,0,0,0.02)] flex items-center justify-between z-20">
-                    <div class="flex items-center gap-4">
-                        <div id="drag-source" draggable="true" class="group cursor-grab active:cursor-grabbing">
-                            <div class="w-20 h-16 bg-gradient-to-b from-amber-300 to-amber-400 border-b-4 border-amber-600 rounded-xl flex flex-col items-center justify-center text-amber-900 shadow-lg transform transition group-hover:-translate-y-1 group-active:scale-95 group-active:border-b-0 group-active:mt-1">
-                                <span class="text-2xl font-bold leading-none">+</span>
-                                <span class="text-[10px] font-bold uppercase">Meja</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-gray-100 px-4 py-2 rounded-2xl flex flex-col items-end border border-gray-200">
-                        <span class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Bilangan Meja</span>
-                        <div class="text-2xl font-bold text-gray-800 leading-none">
-                            <span id="count-display" class="text-anime-purple">1</span> <span class="text-gray-400 text-lg">/ 5</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="notification" class="absolute top-16 left-1/2 transform -translate-x-1/2 bg-rose-500 text-white px-6 py-2 rounded-full shadow-xl text-sm font-bold opacity-0 transition-all duration-300 -translate-y-4 pointer-events-none z-50 flex items-center gap-2">
-                    <span id="notification-text">Had maksimum dicapai!</span>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-3xl shadow-sm border-2 border-gray-100 p-6">
-                <h2 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4 flex items-center gap-2">Pemerhatian Data</h2>
-                <div class="overflow-hidden rounded-2xl border border-gray-200">
-                    <table class="w-full text-center text-sm">
-                        <thead class="bg-indigo-50 text-indigo-900 font-bold">
-                            <tr><th class="p-3">Meja (n)</th><th class="p-3">Kerusi (C)</th></tr>
-                        </thead>
-                        <tbody id="data-table-body" class="bg-white divide-y divide-gray-100"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div class="lg:col-span-5 flex flex-col h-full lg:sticky lg:top-24">
-            <div id="quiz-card" class="bg-white rounded-3xl shadow-lg border-2 border-indigo-100 flex flex-col h-[900px] relative overflow-hidden">
-                <div class="p-6 pb-6 border-b border-gray-100 bg-white z-20">
-                    <div class="flex justify-between items-end mb-4">
-                        <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Penilaian Prestasi</span>
-                        <span id="domain-badge" class="bg-teal-100 text-teal-700 text-[10px] font-bold px-2 py-1 rounded-lg">Mengetahui</span>
-                    </div>
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold text-gray-800">Item <span id="current-q-num" class="text-anime-purple">1</span></h2>
-                        <span class="text-xs font-bold text-anime-purple bg-anime-purple/10 px-2 py-1 rounded-full">Kemajuan: <span id="progress-percent">25</span>%</span>
-                    </div>
-                    <div class="relative pt-1">
-                        <div class="flex mb-2 items-center justify-between relative">
-                            <div class="absolute left-0 top-1/2 transform -translate-y-1/2 w-full h-1.5 bg-gray-100 rounded-full z-0"></div>
-                            <div id="progress-line" class="absolute left-0 top-1/2 transform -translate-y-1/2 h-1.5 bg-gradient-to-r from-anime-purple to-anime-pink rounded-full z-10 progress-line" style="width: 0%"></div>
-                            <div class="relative z-20 flex justify-between w-full">
-                                <div id="marker-1" class="w-6 h-6 rounded-full bg-anime-purple text-white text-[10px] font-bold flex items-center justify-center border-2 border-white shadow-md progress-step">1</div>
-                                <div id="marker-2" class="w-6 h-6 rounded-full bg-white text-gray-400 text-[10px] font-bold flex items-center justify-center border-2 border-gray-100 shadow-sm progress-step">2</div>
-                                <div id="marker-3" class="w-6 h-6 rounded-full bg-white text-gray-400 text-[10px] font-bold flex items-center justify-center border-2 border-gray-100 shadow-sm progress-step">3</div>
-                                <div id="marker-4" class="w-6 h-6 rounded-full bg-white text-gray-400 text-[10px] font-bold flex items-center justify-center border-2 border-gray-100 shadow-sm progress-step">4</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="questions-wrapper" class="p-6 flex-grow overflow-y-auto custom-scrollbar bg-slate-50/50">
-                    <div id="q1" class="question-block fade-in">
-                        <div class="prose prose-sm text-gray-700 mb-6">
-                            <p class="text-base leading-relaxed">Berdasarkan simulasi susun atur meja di sebelah kiri, didapati pola adalah seperti berikut:</p>
-                            <div class="bg-white p-4 rounded-2xl border-2 border-indigo-50 shadow-sm my-4">
-                                <ul class="list-none space-y-2 font-bold text-gray-600">
-                                    <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-anime-purple"></span> 1 meja = 4 kerusi</li>
-                                    <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-anime-purple"></span> 2 meja = 6 kerusi</li>
-                                    <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-anime-purple"></span> 3 meja = 8 kerusi</li>
-                                </ul>
-                            </div>
-                            <p class="font-bold text-gray-900 text-lg">Berapakah bilangan kerusi yang diperlukan jika terdapat <span class="text-anime-purple border-b-2 border-anime-purple/30">7 buah meja</span> disusun sebaris?</p>
-                        </div>
-                        <div class="grid gap-3 options-container" data-qid="1">
-                            <button onclick="selectAnswer(1, 'A', this)" class="btn-option text-left p-4 rounded-2xl flex items-center gap-4">
-                                <span class="option-label w-8 h-8 flex items-center justify-center border-2 border-gray-300 rounded-lg text-xs font-bold">A</span>
-                                <span class="font-bold text-gray-700">14 kerusi</span>
-                            </button>
-                            <button onclick="selectAnswer(1, 'B', this)" class="btn-option text-left p-4 rounded-2xl flex items-center gap-4">
-                                <span class="option-label w-8 h-8 flex items-center justify-center border-2 border-gray-300 rounded-lg text-xs font-bold">B</span>
-                                <span class="font-bold text-gray-700">16 kerusi</span>
-                            </button>
-                            <button onclick="selectAnswer(1, 'C', this)" class="btn-option text-left p-4 rounded-2xl flex items-center gap-4">
-                                <span class="option-label w-8 h-8 flex items-center justify-center border-2 border-gray-300 rounded-lg text-xs font-bold">C</span>
-                                <span class="font-bold text-gray-700">18 kerusi</span>
-                            </button>
-                            <button onclick="selectAnswer(1, 'D', this)" class="btn-option text-left p-4 rounded-2xl flex items-center gap-4">
-                                <span class="option-label w-8 h-8 flex items-center justify-center border-2 border-gray-300 rounded-lg text-xs font-bold">D</span>
-                                <span class="font-bold text-gray-700">28 kerusi</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div id="q2" class="question-block hidden fade-in">
-                        <div class="prose prose-sm text-gray-700 mb-6">
-                            <p class="font-bold text-gray-900 text-lg leading-relaxed">Jika terdapat <span class="text-anime-pink border-b-2 border-anime-pink/30">22 buah kerusi</span> dalam susunan tersebut, berapakah bilangan meja yang digunakan?</p>
-                            <p class="text-sm text-gray-400 italic mt-3 bg-white p-3 rounded-xl border border-gray-100">Fikirkan secara songsang: Jika diberi bilangan kerusi, bagaimana anda menentukan bilangan meja?</p>
-                        </div>
-                        <div class="grid gap-3 options-container" data-qid="2">
-                            <button onclick="selectAnswer(2, 'A', this)" class="btn-option text-left p-4 rounded-2xl flex items-center gap-4">
-                                <span class="option-label w-8 h-8 flex items-center justify-center border-2 border-gray-300 rounded-lg text-xs font-bold">A</span>
-                                <span class="font-bold text-gray-700">9 meja</span>
-                            </button>
-                            <button onclick="selectAnswer(2, 'B', this)" class="btn-option text-left p-4 rounded-2xl flex items-center gap-4">
-                                <span class="option-label w-8 h-8 flex items-center justify-center border-2 border-gray-300 rounded-lg text-xs font-bold">B</span>
-                                <span class="font-bold text-gray-700">10 meja</span>
-                            </button>
-                            <button onclick="selectAnswer(2, 'C', this)" class="btn-option text-left p-4 rounded-2xl flex items-center gap-4">
-                                <span class="option-label w-8 h-8 flex items-center justify-center border-2 border-gray-300 rounded-lg text-xs font-bold">C</span>
-                                <span class="font-bold text-gray-700">11 meja</span>
-                            </button>
-                            <button onclick="selectAnswer(2, 'D', this)" class="btn-option text-left p-4 rounded-2xl flex items-center gap-4">
-                                <span class="option-label w-8 h-8 flex items-center justify-center border-2 border-gray-300 rounded-lg text-xs font-bold">D</span>
-                                <span class="font-bold text-gray-700">12 meja</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div id="q3" class="question-block hidden fade-in">
-                        <div class="prose prose-sm text-gray-700 mb-6">
-                            <p class="text-base leading-relaxed">Antara berikut, yang manakah mewakili <strong>formula umum</strong> bagi bilangan kerusi, <em class="font-serif">C</em>, untuk <em class="font-serif">n</em> buah meja?</p>
-                        </div>
-                        <div class="grid gap-3 options-container" data-qid="3">
-                            <button onclick="selectAnswer(3, 'A', this)" class="btn-option text-left p-4 rounded-2xl flex items-center gap-4">
-                                <span class="option-label w-8 h-8 flex items-center justify-center border-2 border-gray-300 rounded-lg text-xs font-bold">A</span>
-                                <span class="font-bold text-gray-700 italic font-serif">C = n + 4</span>
-                            </button>
-                            <button onclick="selectAnswer(3, 'B', this)" class="btn-option text-left p-4 rounded-2xl flex items-center gap-4">
-                                <span class="option-label w-8 h-8 flex items-center justify-center border-2 border-gray-300 rounded-lg text-xs font-bold">B</span>
-                                <span class="font-bold text-gray-700 italic font-serif">C = 2n + 2</span>
-                            </button>
-                            <button onclick="selectAnswer(3, 'C', this)" class="btn-option text-left p-4 rounded-2xl flex items-center gap-4">
-                                <span class="option-label w-8 h-8 flex items-center justify-center border-2 border-gray-300 rounded-lg text-xs font-bold">C</span>
-                                <span class="font-bold text-gray-700 italic font-serif">C = 4n</span>
-                            </button>
-                            <button onclick="selectAnswer(3, 'D', this)" class="btn-option text-left p-4 rounded-2xl flex items-center gap-4">
-                                <span class="option-label w-8 h-8 flex items-center justify-center border-2 border-gray-300 rounded-lg text-xs font-bold">D</span>
-                                <span class="font-bold text-gray-700 italic font-serif">C = 2n + 4</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div id="q4" class="question-block hidden fade-in pb-4">
-                        <div class="bg-white p-5 rounded-3xl shadow-sm border-2 border-indigo-50 mb-6">
-                            <h3 class="font-bold text-lg text-gray-800 mb-2">Perbandingan Kos (Optimasi)</h3>
-                            <p class="text-sm text-gray-600 mb-4">Sekolah perlu menyediakan tempat duduk untuk <strong>60 orang tetamu</strong>. Bandingkan dua pilihan berikut:</p>
-                            <div class="grid gap-3 mb-4">
-                                <div class="bg-blue-50/50 p-3 rounded-2xl border border-blue-100">
-                                    <strong class="text-blue-700 text-xs uppercase">Pilihan A (Barisan Panjang)</strong>
-                                    <p class="text-[11px] text-blue-600 mt-1 italic">Meja disusun bersambung sebaris (Gunakan formula Item 3).</p>
-                                </div>
-                                <div class="bg-green-50/50 p-3 rounded-2xl border border-green-100">
-                                    <strong class="text-green-700 text-xs uppercase">Pilihan B (Meja Asingan)</strong>
-                                    <p class="text-[11px] text-green-600 mt-1 italic">Meja disusun berasingan (Setiap 1 meja = 4 orang).</p>
-                                </div>
-                            </div>
-                            <div class="bg-gray-50 p-3 rounded-xl border border-gray-200 text-xs font-bold text-gray-500">
-                                Info Kos: Meja = RM 20, Kerusi = RM 5.
-                            </div>
-                        </div>
-
-                        <div class="grid gap-4">
-                            <!-- Table Calculator -->
-                            <div class="border-2 border-blue-100 rounded-3xl p-5 bg-white shadow-sm">
-                                <h4 class="font-bold text-blue-700 text-xs mb-4 uppercase tracking-widest">Kira Kos Meja</h4>
-                                <div class="flex flex-wrap gap-3 items-end">
-                                    <div class="flex-grow min-w-[100px]">
-                                        <label class="text-[10px] font-bold text-gray-400 block mb-1">Bilangan Meja</label>
-                                        <input type="number" id="input-calc-meja" class="w-full border-2 border-gray-100 p-2 rounded-xl text-sm font-bold focus:border-blue-400 outline-none">
-                                    </div>
-                                    <button onclick="calculateGeneric('meja')" class="bg-blue-500 text-white px-6 py-2 rounded-xl text-xs font-bold hover:bg-blue-600 shadow-md btn-anime border-blue-700">Kira</button>
-                                </div>
-                                <div id="res-calc-meja" class="hidden mt-4 bg-blue-50 p-3 rounded-xl text-center text-blue-700 font-bold text-sm">Kos Meja: RM <span class="val">0</span></div>
-                            </div>
-
-                            <!-- Chair Calculator -->
-                            <div class="border-2 border-green-100 rounded-3xl p-5 bg-white shadow-sm">
-                                <h4 class="font-bold text-green-700 text-xs mb-4 uppercase tracking-widest">Kira Kos Kerusi</h4>
-                                <div class="flex flex-wrap gap-3 items-end">
-                                    <div class="flex-grow min-w-[100px]">
-                                        <label class="text-[10px] font-bold text-gray-400 block mb-1">Bilangan Kerusi</label>
-                                        <input type="number" id="input-calc-kerusi" class="w-full border-2 border-gray-100 p-2 rounded-xl text-sm font-bold focus:border-green-400 outline-none">
-                                    </div>
-                                    <button onclick="calculateGeneric('kerusi')" class="bg-green-500 text-white px-6 py-2 rounded-xl text-xs font-bold hover:bg-green-600 shadow-md btn-anime border-green-700">Kira</button>
-                                </div>
-                                <div id="res-calc-kerusi" class="hidden mt-4 bg-green-50 p-3 rounded-xl text-center text-green-700 font-bold text-sm">Kos Kerusi: RM <span class="val">0</span></div>
-                            </div>
-
-                            <!-- Final Conclusion Card -->
-                            <div class="bg-anime-purple/10 p-5 rounded-3xl border-2 border-anime-purple/30 shadow-sm mt-4">
-                                <p class="text-sm font-bold text-anime-purple mb-4">Misi Anda: Pilih susunan untuk 60 orang tetamu.</p>
-                                <div class="flex flex-col gap-4">
-                                    <div class="flex flex-wrap items-center gap-3 text-sm font-bold text-gray-700 bg-white/50 p-3 rounded-2xl">
-                                        <span>Susunan</span>
-                                        <select id="final-choice" onchange="checkCompletion()" class="bg-white border-2 border-anime-purple/20 rounded-xl p-2 focus:outline-none">
-                                            <option value="">?</option>
-                                            <option value="A">A (Bersambung)</option>
-                                            <option value="B">B (Berasingan)</option>
-                                        </select>
-                                        <span>adalah lebih jimat.</span>
-                                    </div>
-                                    <div class="flex flex-wrap items-center gap-3 text-sm font-bold text-gray-700 bg-white/50 p-3 rounded-2xl">
-                                        <span>Perbezaan Kos: RM</span>
-                                        <input type="number" id="final-diff" oninput="checkCompletion()" class="w-24 p-2 border-2 border-anime-purple/20 rounded-xl text-center outline-none">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="quiz-complete" class="hidden flex flex-col items-center justify-center h-full text-center fade-in">
-                        <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mb-6 shadow-xl border-4 border-white"><span class="text-5xl">🏆</span></div>
-                        <h3 class="text-3xl font-bold text-gray-800 mb-2">Latihan Selesai!</h3>
-                        <p class="text-gray-500 mb-8 px-4">Hebat! Anda telah berjaya membantu pihak sekolah menentukan susun atur meja yang paling jimat!</p>
-                        <button onclick="location.reload()" class="btn-anime bg-anime-purple hover:bg-anime-purple-light text-white px-10 py-4 rounded-2xl font-bold shadow-xl text-lg border-anime-purple-light">Mula Semula</button>
-                    </div>
-                </div>
-
-                <div id="quiz-nav" class="p-4 border-t border-gray-100 bg-white z-20 flex justify-between items-center">
-                    <button id="btn-prev" onclick="changeQuestion(-1)" class="btn-anime px-6 py-2 bg-white text-gray-600 border-gray-300 border-2 rounded-xl font-bold shadow-sm flex items-center gap-2 transition disabled:opacity-50" disabled>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" /></svg> Kembali
-                    </button>
-                    <button id="btn-next" onclick="changeQuestion(1)" class="btn-anime bg-anime-purple text-white border-anime-purple-light px-8 py-2 rounded-xl font-bold shadow-md flex items-center gap-2 transition disabled:bg-gray-300 disabled:border-gray-400" disabled>
-                        Seterusnya <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" /></svg>
-                    </button>
-                </div>
-            </div>
-            <p class="text-center text-[10px] text-gray-400 font-bold mt-3 uppercase tracking-widest">Sila lengkapkan item untuk meneruskan sesi.</p>
-        </div>
+<header class="bg-white border-b-4 border-anime-purple/20 py-3 px-4 sticky top-0 z-50 shadow-sm">
+  <div class="max-w-7xl mx-auto flex justify-between items-center">
+    <div class="flex items-center gap-3">
+      <div class="bg-anime-purple text-white p-2 rounded-xl rotate-3 shadow-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-xl md:text-2xl font-bold text-gray-800 leading-none">Unit 1: AJK PENYEDIAAN TEMPAT</h1>
+        <p class="text-xs text-anime-purple font-medium bg-anime-purple/10 px-2 py-0.5 rounded-full inline-block mt-1">Math is Fun!</p>
+        <p id="muridInfo" class="text-[11px] text-gray-500 mt-1"></p>
+      </div>
     </div>
 
-    <script>
-const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbz49OWWMgpAT6gE7pCzMOPJrAYI062bWYog-362qXqxNi_CfIxrD6NJK4-iiVJLnXUsYw/exec";
+    <button onclick="resetSim()" class="btn-anime bg-rose-400 hover:bg-rose-500 text-white border-rose-600 px-4 py-2 rounded-xl text-sm font-bold shadow-md flex items-center gap-2">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+          d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+      </svg>
+      <span class="hidden sm:inline">Mula Semula</span>
+    </button>
+  </div>
+</header>
 
-const answers = {}; // simpan jawapan A/B/C/D
+<div class="flex-grow max-w-7xl mx-auto w-full p-4 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+  <div class="lg:col-span-7 flex flex-col gap-5">
+    <div class="bg-white p-5 rounded-3xl shadow-sm border-2 border-indigo-50 flex items-start gap-4 relative overflow-hidden group hover:border-anime-purple transition-colors">
+      <div class="absolute top-0 right-0 w-20 h-20 bg-anime-purple/5 rounded-bl-full -mr-4 -mt-4"></div>
+      <div class="bg-gradient-to-br from-indigo-400 to-purple-500 p-3 rounded-2xl text-white shadow-md shrink-0">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+      </div>
+      <div>
+        <h3 class="font-bold text-gray-800 text-lg">Misi Anda: Ketua Dekorasi!</h3>
+        <p class="text-gray-500 text-sm leading-relaxed mt-1">
+          Sekolah akan mengadakan jamuan makan malam. Tugas anda adalah menentukan bilangan kerusi yang diperlukan apabila meja-meja disusun secara <strong>bersambung (memanjang)</strong> bagi menjimatkan ruang dewan.
+        </p>
+      </div>
+    </div>
 
-function sendToAppsScript(payload){
-  return fetch(WEBAPP_URL, {
-    method: "POST",
-    headers: { "Content-Type": "text/plain;charset=utf-8" },
-    body: JSON.stringify(payload),
-  })
-  .then(r => r.text())
-  .then(t => { console.log("RESP APPSCRIPT:", t); return t; });
-}
+    <div class="bg-white rounded-3xl shadow-md border-2 border-gray-100 overflow-hidden flex flex-col relative h-[500px]">
+      <div class="bg-sky-50 px-5 py-3 border-b border-sky-100 flex items-center justify-between">
+        <div class="flex items-center gap-2 text-sky-700 font-bold text-sm uppercase tracking-wide">
+          Arahan: Seret atau klik meja untuk sambung
+        </div>
+      </div>
 
-function submitUnit1(){
-  const nama = localStorage.getItem("nama") || "";
-  const email = localStorage.getItem("email") || "";
-  const kelas = localStorage.getItem("kelas") || "";
-  const sekolah = localStorage.getItem("sekolah") || "";
+      <div id="simulation-area" class="flex-grow relative flex items-center justify-center bg-slate-50 overflow-hidden touch-none">
+        <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#cbd5e1 2px, transparent 2px); background-size: 20px 20px;"></div>
+        <div id="arrangement-container" class="relative h-60 w-full transition-all duration-300 z-10"></div>
+        <div id="drop-indicator" class="hidden absolute w-24 h-20 border-4 border-dashed border-green-400 bg-green-50/50 rounded-2xl flex items-center justify-center text-green-600 font-bold animate-pulse z-0">Lepas!</div>
+      </div>
 
-  const pilihan = (document.getElementById("final-choice")?.value || "").trim();
-  const beza = (document.getElementById("final-diff")?.value || "").trim();
+      <div class="bg-white p-4 border-t border-gray-100 shadow-[0_-5px_20px_rgba(0,0,0,0.02)] flex items-center justify-between z-20">
+        <div class="flex items-center gap-4">
+          <div id="drag-source" draggable="true" class="group cursor-grab active:cursor-grabbing">
+            <div class="w-20 h-16 bg-gradient-to-b from-amber-300 to-amber-400 border-b-4 border-amber-600 rounded-xl flex flex-col items-center justify-center text-amber-900 shadow-lg transform transition group-hover:-translate-y-1 group-active:scale-95 group-active:border-b-0 group-active:mt-1">
+              <span class="text-2xl font-bold leading-none">+</span>
+              <span class="text-[10px] font-bold uppercase">Meja</span>
+            </div>
+          </div>
+        </div>
+        <div class="bg-gray-100 px-4 py-2 rounded-2xl flex flex-col items-end border border-gray-200">
+          <span class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Bilangan Meja</span>
+          <div class="text-2xl font-bold text-gray-800 leading-none">
+            <span id="count-display" class="text-anime-purple">1</span> <span class="text-gray-400 text-lg">/ 5</span>
+          </div>
+        </div>
+      </div>
 
-  const payload = {
-    unit: "UNIT 1",
-    nama, email, kelas, sekolah,
-    jawapan: {
-      Q1: answers[1] || "",
-      Q2: answers[2] || "",
-      Q3: answers[3] || "",
-      Q4_pilihan: pilihan,
-      Q4_beza: beza
+      <div id="notification" class="absolute top-16 left-1/2 transform -translate-x-1/2 bg-rose-500 text-white px-6 py-2 rounded-full shadow-xl text-sm font-bold opacity-0 transition-all duration-300 -translate-y-4 pointer-events-none z-50 flex items-center gap-2">
+        <span id="notification-text">Had maksimum dicapai!</span>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-3xl shadow-sm border-2 border-gray-100 p-6">
+      <h2 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4 flex items-center gap-2">Pemerhatian Data</h2>
+      <div class="overflow-hidden rounded-2xl border border-gray-200">
+        <table class="w-full text-center text-sm">
+          <thead class="bg-indigo-50 text-indigo-900 font-bold">
+            <tr><th class="p-3">Meja (n)</th><th class="p-3">Kerusi (C)</th></tr>
+          </thead>
+          <tbody id="data-table-body" class="bg-white divide-y divide-gray-100"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="lg:col-span-5 flex flex-col h-full lg:sticky lg:top-24">
+    <div id="quiz-card" class="bg-white rounded-3xl shadow-lg border-2 border-indigo-100 flex flex-col h-[900px] relative overflow-hidden">
+      <div class="p-6 pb-6 border-b border-gray-100 bg-white z-20">
+        <div class="flex justify-between items-end mb-4">
+          <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Penilaian Prestasi</span>
+          <span id="domain-badge" class="bg-teal-100 text-teal-700 text-[10px] font-bold px-2 py-1 rounded-lg">Mengetahui</span>
+        </div>
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold text-gray-800">Item <span id="current-q-num" class="text-anime-purple">1</span></h2>
+          <span class="text-xs font-bold text-anime-purple bg-anime-purple/10 px-2 py-1 rounded-full">Kemajuan: <span id="progress-percent">25</span>%</span>
+        </div>
+        <div class="relative pt-1">
+          <div class="flex mb-2 items-center justify-between relative">
+            <div class="absolute left-0 top-1/2 transform -translate-y-1/2 w-full h-1.5 bg-gray-100 rounded-full z-0"></div>
+            <div id="progress-line" class="absolute left-0 top-1/2 transform -translate-y-1/2 h-1.5 bg-gradient-to-r from-anime-purple to-anime-pink rounded-full z-10 progress-line" style="width: 0%"></div>
+            <div class="relative z-20 flex justify-between w-full">
+              <div id="marker-1" class="w-6 h-6 rounded-full bg-anime-purple text-white text-[10px] font-bold flex items-center justify-center border-2 border-white shadow-md progress-step">1</div>
+              <div id="marker-2" class="w-6 h-6 rounded-full bg-white text-gray-400 text-[10px] font-bold flex items-center justify-center border-2 border-gray-100 shadow-sm progress-step">2</div>
+              <div id="marker-3" class="w-6 h-6 rounded-full bg-white text-gray-400 text-[10px] font-bold flex items-center justify-center border-2 border-gray-100 shadow-sm progress-step">3</div>
+              <div id="marker-4" class="w-6 h-6 rounded-full bg-white text-gray-400 text-[10px] font-bold flex items-center justify-center border-2 border-gray-100 shadow-sm progress-step">4</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="questions-wrapper" class="p-6 flex-grow overflow-y-auto custom-scrollbar bg-slate-50/50">
+
+        <div id="q1" class="question-block fade-in">
+          <div class="prose prose-sm text-gray-700 mb-6">
+            <p class="text-base leading-relaxed">Berdasarkan simulasi susun atur meja di sebelah kiri, didapati pola adalah seperti berikut:</p>
+            <div class="bg-white p-4 rounded-2xl border-2 border-indigo-50 shadow-sm my-4">
+              <ul class="list-none space-y-2 font-bold text-gray-600">
+                <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-anime-purple"></span> 1 meja = 4 kerusi</li>
+                <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-anime-purple"></span> 2 meja = 6 kerusi</li>
+                <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-anime-purple"></span> 3 meja = 8 kerusi</li>
+              </ul>
+            </div>
+            <p class="font-bold text-gray-900 text-lg">Berapakah bilangan kerusi yang diperlukan jika terdapat <span class="text-anime-purple border-b-2 border-anime-purple/30">7 buah meja</span> disusun sebaris?</p>
+          </div>
+          <div class="grid gap-3 options-container" data-qid="1">
+            <button onclick="selectAnswer(1,'A',this)" class="btn-option text-left p-4 rounded-2xl flex items-center gap-4"><span class="option-label w-8 h-8 flex items-center justify-center border-2 border-gray-300 rounded-lg text-xs font-bold">A</span><span class="font-bold text-gray-700">14 kerusi</span></button>
+            <button onclick="selectAnswer(1,'B',this)" class="btn-option text-left p-4 rounded-2xl flex items-center gap-4"><span class="option-label w-8 h-8 flex items-center justify-center border-2 border-gray-300 rounded-lg text-xs font-bold">B</span><span class="font-bold text-gray-700">16 kerusi</span></button>
+            <button onclick="selectAnswer(1,'C',this)" class="btn-option text-left p-4 rounded-2xl flex items-center gap-4"><span class="option-label w-8 h-8 flex items-center justify-center border-2 border-gray-300 rounded-lg text-xs font-bold">C</span><span class="font-bold text-gray-700">18 kerusi</span></button>
+            <button onclick="selectAnswer(1,'D',this)" class="btn-option text-left p-4 rounded-2xl flex items-center gap-4"><span class="option-label w-8 h-8 flex items-center justify-center border-2 border-gray-300 rounded-lg text-xs font-bold">D</span><span class="font-bold text-gray-700">28 kerusi</span></button>
+          </div>
+        </div>
+
+        <div id="q2" class="question-block hidden fade-in">
+          <div class="prose prose-sm text-gray-700 mb-6">
+            <p class="font-bold text-gray-900 text-lg leading-relaxed">Jika terdapat <span class="text-anime-pink border-b-2 border-anime-pink/30">22 buah kerusi</span> dalam susunan tersebut, berapakah bilangan meja yang digunakan?</p>
+          </div>
+          <div class="grid gap-3 options-container" data-qid="2">
+            <button onclick="selectAnswer(2,'A',this)" class="btn-option text-left p-4 rounded-2xl flex items-center gap-4"><span class="option-label w-8 h-8 flex items-center justify-center border-2 border-gray-300 rounded-lg text-xs font-bold">A</span><span class="font-bold text-gray-700">9 meja</span></button>
+            <button onclick="selectAnswer(2,'B',this)" class="btn-option text-left p-4 rounded-2xl flex items-center gap-4"><span class="option-label w-8 h-8 flex items-center justify-center border-2 border-gray-300 rounded-lg text-xs font-bold">B</span><span class="font-bold text-gray-700">10 meja</span></button>
+            <button onclick="selectAnswer(2,'C',this)" class="btn-option text-left p-4 rounded-2xl flex items-center gap-4"><span class="option-label w-8 h-8 flex items-center justify-center border-2 border-gray-300 rounded-lg text-xs font-bold">C</span><span class="font-bold text-gray-700">11 meja</span></button>
+            <button onclick="selectAnswer(2,'D',this)" class="btn-option text-left p-4 rounded-2xl flex items-center gap-4"><span class="option-label w-8 h-8 flex items-center justify-center border-2 border-gray-300 rounded-lg text-xs font-bold">D</span><span class="font-bold text-gray-700">12 meja</span></button>
+          </div>
+        </div>
+
+        <div id="q3" class="question-block hidden fade-in">
+          <div class="prose prose-sm text-gray-700 mb-6">
+            <p class="text-base leading-relaxed">Antara berikut, yang manakah mewakili <strong>formula umum</strong> bagi bilangan kerusi, <em class="font-serif">C</em>, untuk <em class="font-serif">n</em> buah meja?</p>
+          </div>
+          <div class="grid gap-3 options-container" data-qid="3">
+            <button onclick="selectAnswer(3,'A',this)" class="btn-option text-left p-4 rounded-2xl flex items-center gap-4"><span class="option-label w-8 h-8 flex items-center justify-center border-2 border-gray-300 rounded-lg text-xs font-bold">A</span><span class="font-bold text-gray-700 italic font-serif">C = n + 4</span></button>
+            <button onclick="selectAnswer(3,'B',this)" class="btn-option text-left p-4 rounded-2xl flex items-center gap-4"><span class="option-label w-8 h-8 flex items-center justify-center border-2 border-gray-300 rounded-lg text-xs font-bold">B</span><span class="font-bold text-gray-700 italic font-serif">C = 2n + 2</span></button>
+            <button onclick="selectAnswer(3,'C',this)" class="btn-option text-left p-4 rounded-2xl flex items-center gap-4"><span class="option-label w-8 h-8 flex items-center justify-center border-2 border-gray-300 rounded-lg text-xs font-bold">C</span><span class="font-bold text-gray-700 italic font-serif">C = 4n</span></button>
+            <button onclick="selectAnswer(3,'D',this)" class="btn-option text-left p-4 rounded-2xl flex items-center gap-4"><span class="option-label w-8 h-8 flex items-center justify-center border-2 border-gray-300 rounded-lg text-xs font-bold">D</span><span class="font-bold text-gray-700 italic font-serif">C = 2n + 4</span></button>
+          </div>
+        </div>
+
+        <div id="q4" class="question-block hidden fade-in pb-4">
+          <div class="bg-white p-5 rounded-3xl shadow-sm border-2 border-indigo-50 mb-6">
+            <h3 class="font-bold text-lg text-gray-800 mb-2">Perbandingan Kos (Optimasi)</h3>
+            <p class="text-sm text-gray-600 mb-4">Sekolah perlu menyediakan tempat duduk untuk <strong>60 orang tetamu</strong>.</p>
+          </div>
+
+          <div class="bg-anime-purple/10 p-5 rounded-3xl border-2 border-anime-purple/30 shadow-sm mt-4">
+            <p class="text-sm font-bold text-anime-purple mb-4">Misi Anda: Pilih susunan untuk 60 orang tetamu.</p>
+            <div class="flex flex-col gap-4">
+              <div class="flex flex-wrap items-center gap-3 text-sm font-bold text-gray-700 bg-white/50 p-3 rounded-2xl">
+                <span>Susunan</span>
+                <select id="final-choice" onchange="checkCompletion()" class="bg-white border-2 border-anime-purple/20 rounded-xl p-2 focus:outline-none">
+                  <option value="">?</option>
+                  <option value="A">A (Bersambung)</option>
+                  <option value="B">B (Berasingan)</option>
+                </select>
+                <span>adalah lebih jimat.</span>
+              </div>
+              <div class="flex flex-wrap items-center gap-3 text-sm font-bold text-gray-700 bg-white/50 p-3 rounded-2xl">
+                <span>Perbezaan Kos: RM</span>
+                <input type="number" id="final-diff" oninput="checkCompletion()" class="w-24 p-2 border-2 border-anime-purple/20 rounded-xl text-center outline-none">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="quiz-complete" class="hidden flex flex-col items-center justify-center h-full text-center fade-in">
+          <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mb-6 shadow-xl border-4 border-white"><span class="text-5xl">🏆</span></div>
+          <h3 class="text-3xl font-bold text-gray-800 mb-2">Latihan Selesai!</h3>
+          <p class="text-gray-500 mb-8 px-4">Jawapan sudah dihantar.</p>
+          <button onclick="location.href='index.html'" class="btn-anime bg-anime-purple hover:bg-anime-purple-light text-white px-10 py-4 rounded-2xl font-bold shadow-xl text-lg border-anime-purple-light">Kembali Ke Portal</button>
+        </div>
+      </div>
+
+      <div id="quiz-nav" class="p-4 border-t border-gray-100 bg-white z-20 flex justify-between items-center">
+        <button id="btn-prev" onclick="changeQuestion(-1)" class="btn-anime px-6 py-2 bg-white text-gray-600 border-gray-300 border-2 rounded-xl font-bold shadow-sm flex items-center gap-2 transition disabled:opacity-50" disabled>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" /></svg> Kembali
+        </button>
+        <button id="btn-next" onclick="changeQuestion(1)" class="btn-anime bg-anime-purple text-white border-anime-purple-light px-8 py-2 rounded-xl font-bold shadow-md flex items-center gap-2 transition disabled:bg-gray-300 disabled:border-gray-400" disabled>
+          Seterusnya <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" /></svg>
+        </button>
+      </div>
+    </div>
+    <p class="text-center text-[10px] text-gray-400 font-bold mt-3 uppercase tracking-widest">Sila lengkapkan item untuk meneruskan sesi.</p>
+  </div>
+</div>
+
+<script>
+  /***********************
+   *  SETTINGS
+   ***********************/
+  const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbz49OWWMgpAT6gE7pCzMOPJrAYI062bWYog-362qXqxNi_CfIxrD6NJK4-iiVJLnXUsYw/exec";
+
+  /***********************
+   *  LOGIN DATA HELPER
+   ***********************/
+  function getParam(name){
+    const v = new URLSearchParams(window.location.search).get(name);
+    return v ? decodeURIComponent(v) : "";
+  }
+
+  function getLoginData(){
+    // 1) cuba dari URL
+    const namaUrl = getParam("nama");
+    const emailUrl = getParam("email");
+    const kelasUrl = getParam("kelas");
+    const sekolahUrl = getParam("sekolah");
+
+    // 2) fallback localStorage
+    const nama = namaUrl || localStorage.getItem("nama") || "";
+    const email = emailUrl || localStorage.getItem("email") || "";
+    const kelas = kelasUrl || localStorage.getItem("kelas") || "";
+    const sekolah = sekolahUrl || localStorage.getItem("sekolah") || "";
+
+    // simpan semula supaya kekal
+    if(nama) localStorage.setItem("nama", nama);
+    if(email) localStorage.setItem("email", email);
+    if(kelas) localStorage.setItem("kelas", kelas);
+    if(sekolah) localStorage.setItem("sekolah", sekolah);
+
+    return { nama, email, kelas, sekolah };
+  }
+
+  /***********************
+   *  SEND DATA
+   ***********************/
+  function sendToAppsScript(payload){
+    console.log("HANTAR PAYLOAD UNIT1:", payload);
+
+    // no-cors untuk elak isu CORS di GitHub Pages.
+    return fetch(WEBAPP_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload),
+    }).then(() => true);
+  }
+
+  /***********************
+   *  QUIZ STATE
+   ***********************/
+  let tableCount = 1;
+  const maxTables = 5;
+  let currentQ = 1;
+  const totalQ = 4;
+  const domains = { 1: 'Mengetahui', 2: 'Mengaplikasi', 3: 'Menaakul', 4: 'Menyelesaikan Masalah' };
+  const answerState = { 1: false, 2: false, 3: false, 4: false };
+  const answers = {}; // Q1-Q3 A/B/C/D
+
+  const container = document.getElementById('arrangement-container');
+  const dragSource = document.getElementById('drag-source');
+  const dropIndicator = document.getElementById('drop-indicator');
+  const simArea = document.getElementById('simulation-area');
+  const dataTable = document.getElementById('data-table-body');
+  const countDisplay = document.getElementById('count-display');
+  const notif = document.getElementById('notification');
+  const btnNext = document.getElementById('btn-next');
+
+  function init() {
+    renderSim(); renderTable(); setupDragDrop(); updateProgressBar(); validateNavigation();
+    // papar info murid
+    const u = getLoginData();
+    const info = (u.nama || u.email) ? `👤 ${u.nama || "-"} | ${u.email || "-"} | ${u.kelas || "-"} | ${u.sekolah || "-"}` : "⚠️ Maklumat murid belum dibawa masuk (semak index.html redirect).";
+    document.getElementById("muridInfo").textContent = info;
+  }
+
+  function addTable() {
+    if (tableCount < maxTables) { tableCount++; renderSim(); renderTable(); }
+    else { showToast("Maksimum 5 meja sahaja!"); }
+  }
+  function resetSim() { tableCount = 1; renderSim(); renderTable(); }
+
+  function renderSim() {
+    container.innerHTML = '';
+    countDisplay.innerText = tableCount;
+    const tW = 80, tH = 60;
+    const totalW = tableCount * tW;
+    const startX = (container.clientWidth - totalW) / 2;
+    const startY = (container.clientHeight - tH) / 2;
+
+    for(let i=0; i<tableCount; i++) {
+      const el = document.createElement('div');
+      el.className = 'wood-table table-unit-content absolute animate-pop';
+      el.style.width = '80px'; el.style.height = '60px';
+      el.style.left = `${startX + (i*tW)}px`; el.style.top = `${startY}px`;
+      el.innerText = i + 1;
+      container.appendChild(el);
     }
-  };
 
-  btnNext.disabled = true;
+    const chairSize = 26;
+    for(let i=0; i<tableCount; i++) spawnChair(startX + (i*tW) + (tW/2) - (chairSize/2), startY - chairSize - 5);
+    for(let i=0; i<tableCount; i++) spawnChair(startX + (i*tW) + (tW/2) - (chairSize/2), startY + tH + 5);
+    spawnChair(startX - chairSize - 5, startY + (tH/2) - (chairSize/2));
+    spawnChair(startX + totalW + 5, startY + (tH/2) - (chairSize/2));
+  }
 
-  return sendToAppsScript(payload)
-    .then(() => { showToast("Jawapan Unit 1 dihantar ✅"); })
-    .catch(err => { console.error(err); showToast("Gagal hantar ❌ Semak Internet/URL"); })
-    .finally(() => {
-      document.getElementById('questions-wrapper').classList.add('hidden');
-      document.getElementById('quiz-nav').classList.add('hidden');
-      document.getElementById('quiz-complete').classList.remove('hidden');
-      document.getElementById('current-q-num').innerText = "-";
-      document.getElementById('progress-line').style.width = '100%';
-      document.getElementById('progress-percent').innerText = "100";
-    });
-}
-        let tableCount = 1;
-        const maxTables = 5;
-        let currentQ = 1;
-        const totalQ = 4;
-        const domains = { 1: 'Mengetahui', 2: 'Mengaplikasi', 3: 'Menaakul', 4: 'Menyelesaikan Masalah' };
-        const answerState = { 1: false, 2: false, 3: false, 4: false };
+  function spawnChair(x, y) {
+    const c = document.createElement('div');
+    c.className = 'anime-chair';
+    c.style.left = `${x}px`; c.style.top = `${y}px`;
+    container.appendChild(c);
+  }
 
-        const container = document.getElementById('arrangement-container');
-        const dragSource = document.getElementById('drag-source');
-        const dropIndicator = document.getElementById('drop-indicator');
-        const simArea = document.getElementById('simulation-area');
-        const dataTable = document.getElementById('data-table-body');
-        const countDisplay = document.getElementById('count-display');
-        const notif = document.getElementById('notification');
-        const btnNext = document.getElementById('btn-next');
+  function renderTable() {
+    dataTable.innerHTML = '';
+    for(let i=1; i<=tableCount; i++) {
+      const chairs = (i*2)+2;
+      const row = document.createElement('tr');
+      row.className = i === tableCount ? 'bg-indigo-50 text-anime-purple' : '';
+      row.innerHTML = `<td class="p-2 font-bold">${i}</td><td class="p-2 font-bold">${chairs}</td>`;
+      dataTable.appendChild(row);
+    }
+  }
 
-        function init() { renderSim(); renderTable(); setupDragDrop(); updateProgressBar(); }
+  function showToast(msg) {
+    document.getElementById('notification-text').innerText = msg;
+    notif.classList.remove('opacity-0', '-translate-y-4');
+    setTimeout(() => notif.classList.add('opacity-0', '-translate-y-4'), 2200);
+  }
 
-        function addTable() { if (tableCount < maxTables) { tableCount++; renderSim(); renderTable(); } else { showToast("Maksimum 5 meja sahaja!"); } }
-        function resetSim() { tableCount = 1; renderSim(); renderTable(); }
+  function setupDragDrop() {
+    dragSource.addEventListener('dragstart', () => dropIndicator.classList.remove('hidden'));
+    dragSource.addEventListener('dragend', () => dropIndicator.classList.add('hidden'));
+    dragSource.addEventListener('click', addTable);
+    simArea.addEventListener('dragover', (e) => e.preventDefault());
+    simArea.addEventListener('drop', (e) => { e.preventDefault(); addTable(); });
+    window.addEventListener('resize', renderSim);
+  }
 
-        function renderSim() {
-            container.innerHTML = '';
-            countDisplay.innerText = tableCount;
-            const tW = 80; const tH = 60;
-            const totalW = tableCount * tW;
-            const startX = (container.clientWidth - totalW) / 2;
-            const startY = (container.clientHeight - tH) / 2;
+  function selectAnswer(qid, opt, btn) {
+    const cont = document.querySelector(`.options-container[data-qid="${qid}"]`);
+    cont.querySelectorAll('.btn-option').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    answers[qid] = opt;
+    answerState[qid] = true;
+    validateNavigation();
+  }
 
-            for(let i=0; i<tableCount; i++) {
-                const el = document.createElement('div');
-                el.className = 'wood-table table-unit-content absolute animate-pop';
-                el.style.width = '80px'; el.style.height = '60px';
-                el.style.left = `${startX + (i*tW)}px`; el.style.top = `${startY}px`;
-                el.innerText = i + 1;
-                container.appendChild(el);
-            }
+  function checkCompletion() {
+    const choice = (document.getElementById('final-choice').value || "").trim();
+    const diff = (document.getElementById('final-diff').value || "").trim();
+    answerState[4] = (choice !== "" && diff !== "");
+    validateNavigation();
+  }
 
-            const chairSize = 26;
-            for(let i=0; i<tableCount; i++) { spawnChair(startX + (i*tW) + (tW/2) - (chairSize/2), startY - chairSize - 5); }
-            for(let i=0; i<tableCount; i++) { spawnChair(startX + (i*tW) + (tW/2) - (chairSize/2), startY + tH + 5); }
-            spawnChair(startX - chairSize - 5, startY + (tH/2) - (chairSize/2));
-            spawnChair(startX + totalW + 5, startY + (tH/2) - (chairSize/2));
-        }
+  function validateNavigation() {
+    btnNext.disabled = !answerState[currentQ];
+  }
 
-        function spawnChair(x, y) {
-            const c = document.createElement('div');
-            c.className = 'anime-chair'; c.style.left = `${x}px`; c.style.top = `${y}px`;
-            container.appendChild(c);
-        }
+  function updateProgressBar() {
+    const percentage = ((currentQ - 1) / (totalQ - 1)) * 100;
+    document.getElementById('progress-line').style.width = `${percentage}%`;
+    document.getElementById('progress-percent').innerText = Math.round(percentage);
 
-        function renderTable() {
-            dataTable.innerHTML = '';
-            for(let i=1; i<=tableCount; i++) {
-                const chairs = (i*2)+2;
-                const row = document.createElement('tr');
-                row.className = i === tableCount ? 'bg-indigo-50 text-anime-purple' : '';
-                row.innerHTML = `<td class="p-2 font-bold">${i}</td><td class="p-2 font-bold">${chairs}</td>`;
-                dataTable.appendChild(row);
-                if(i===tableCount) row.scrollIntoView({behavior:'smooth', block:'nearest'});
-            }
-        }
+    for (let i = 1; i <= totalQ; i++) {
+      const marker = document.getElementById(`marker-${i}`);
+      if (i < currentQ) { marker.className = 'w-6 h-6 rounded-full bg-green-400 text-white text-[10px] font-bold flex items-center justify-center border-2 border-white shadow-md progress-step'; marker.innerHTML = '✓'; }
+      else if (i === currentQ) { marker.className = 'w-6 h-6 rounded-full bg-anime-purple text-white text-[10px] font-bold flex items-center justify-center border-2 border-white shadow-md progress-step scale-110'; marker.innerHTML = i; }
+      else { marker.className = 'w-6 h-6 rounded-full bg-white text-gray-400 text-[10px] font-bold flex items-center justify-center border-2 border-gray-100 shadow-sm progress-step'; marker.innerHTML = i; }
+    }
+  }
 
-        function showToast(msg) {
-            document.getElementById('notification-text').innerText = msg;
-            notif.classList.remove('opacity-0', '-translate-y-4');
-            setTimeout(() => notif.classList.add('opacity-0', '-translate-y-4'), 2000);
-        }
+  function showComplete() {
+    document.getElementById('questions-wrapper').classList.add('hidden');
+    document.getElementById('quiz-nav').classList.add('hidden');
+    document.getElementById('quiz-complete').classList.remove('hidden');
+    document.getElementById('current-q-num').innerText = "-";
+    document.getElementById('progress-line').style.width = '100%';
+    document.getElementById('progress-percent').innerText = "100";
+  }
 
-        function setupDragDrop() {
-            dragSource.addEventListener('dragstart', () => dropIndicator.classList.remove('hidden'));
-            dragSource.addEventListener('dragend', () => dropIndicator.classList.add('hidden'));
-            dragSource.addEventListener('click', addTable);
-            simArea.addEventListener('dragover', (e) => e.preventDefault());
-            simArea.addEventListener('drop', (e) => { e.preventDefault(); addTable(); });
-            window.addEventListener('resize', renderSim);
-        }
+  function submitUnit1(){
+    const { nama, email, kelas, sekolah } = getLoginData();
 
-function selectAnswer(qid, opt, btn) {
-  const cont = document.querySelector(`.options-container[data-qid="${qid}"]`);
-  cont.querySelectorAll('.btn-option').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
+    const pilihan = (document.getElementById("final-choice")?.value || "").trim();
+    const beza = (document.getElementById("final-diff")?.value || "").trim();
 
-  answers[qid] = opt;       // simpan A/B/C/D
-  answerState[qid] = true;
-  validateNavigation();
-}
+    const payload = {
+      unit: "UNIT 1",
+      nama, email, kelas, sekolah,
+      jawapan: {
+        Q1: answers[1] || "",
+        Q2: answers[2] || "",
+        Q3: answers[3] || "",
+        Q4_pilihan: pilihan,
+        Q4_beza: beza
+      }
+    };
 
-        function calculateGeneric(type) {
-            const input = document.getElementById(`input-calc-${type}`);
-            const resBox = document.getElementById(`res-calc-${type}`);
-            const val = parseInt(input.value);
-            if(!val || val < 0) return;
-            
-            let cost = 0;
-            if(type === 'meja') {
-                cost = val * 20;
-            } else if(type === 'kerusi') {
-                cost = val * 5;
-            }
+    btnNext.disabled = true;
 
-            resBox.querySelector('.val').innerText = cost;
-            resBox.classList.remove('hidden'); resBox.classList.add('fade-in');
-        }
+    return sendToAppsScript(payload)
+      .then(() => { showToast("Jawapan Unit 1 dihantar ✅"); })
+      .catch(() => { showToast("Gagal hantar ❌"); })
+      .finally(() => { showComplete(); });
+  }
 
-        function checkCompletion() {
-            const choice = document.getElementById('final-choice').value;
-            const diff = document.getElementById('final-diff').value;
-            answerState[4] = (choice !== "" && diff !== "");
-            validateNavigation();
-        }
+  function changeQuestion(dir) {
+    const next = currentQ + dir;
 
-        function validateNavigation() { btnNext.disabled = !answerState[currentQ]; }
+    // bila tamat (lepas soalan 4)
+    if(next > totalQ) { submitUnit1(); return; }
 
-        function updateProgressBar() {
-            const percentage = ((currentQ - 1) / (totalQ - 1)) * 100;
-            document.getElementById('progress-line').style.width = `${percentage}%`;
-            document.getElementById('progress-percent').innerText = Math.round(percentage);
-            for (let i = 1; i <= totalQ; i++) {
-                const marker = document.getElementById(`marker-${i}`);
-                if (i < currentQ) { marker.className = 'w-6 h-6 rounded-full bg-green-400 text-white text-[10px] font-bold flex items-center justify-center border-2 border-white shadow-md progress-step'; marker.innerHTML = '✓'; }
-                else if (i === currentQ) { marker.className = 'w-6 h-6 rounded-full bg-anime-purple text-white text-[10px] font-bold flex items-center justify-center border-2 border-white shadow-md progress-step scale-110'; marker.innerHTML = i; }
-                else { marker.className = 'w-6 h-6 rounded-full bg-white text-gray-400 text-[10px] font-bold flex items-center justify-center border-2 border-gray-100 shadow-sm progress-step'; marker.innerHTML = i; }
-            }
-        }
+    document.getElementById(`q${currentQ}`).classList.add('hidden');
+    currentQ = next;
+    document.getElementById(`q${currentQ}`).classList.remove('hidden');
 
-        function changeQuestion(dir) {
-            const next = currentQ + dir;
-            if(next > totalQ) {
-  submitUnit1();
-  return;
-}
+    document.getElementById('current-q-num').innerText = currentQ;
+    document.getElementById('domain-badge').innerText = domains[currentQ];
+    document.getElementById('btn-prev').disabled = currentQ === 1;
 
-            document.getElementById(`q${currentQ}`).classList.add('hidden');
-            currentQ = next;
-            document.getElementById(`q${currentQ}`).classList.remove('hidden');
-            document.getElementById('current-q-num').innerText = currentQ;
-            document.getElementById('domain-badge').innerText = domains[currentQ];
-            document.getElementById('btn-prev').disabled = currentQ === 1;
-            updateProgressBar();
-            btnNext.innerHTML = (currentQ === totalQ) ? 'Tamat <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" /></svg>' : 'Seterusnya <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" /></svg>';
-            validateNavigation();
-        }
+    updateProgressBar();
 
-        init();
-    </script>
+    btnNext.innerHTML = (currentQ === totalQ)
+      ? 'Tamat <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" /></svg>'
+      : 'Seterusnya <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" /></svg>';
+
+    validateNavigation();
+  }
+
+  // bila dropdown berubah
+  document.addEventListener("change", (e) => {
+    if(e.target && (e.target.id === "final-choice" || e.target.id === "final-diff")) checkCompletion();
+  });
+
+  init();
+</script>
+
 </body>
-
 </html>
-
-
-
