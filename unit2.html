@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 2: Pengurus Kantin - Math is Fun!</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Import Fredoka Font for Anime/Cartoon Vibe -->
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    /* Global Font Setting */
+    body {
+        font-family: 'Fredoka', sans-serif;
+        background-color: #FFF0F5; /* Lavender Blush Background */
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #F472B6; /* Pink-400 */
+        border-radius: 10px;
+    }
+
+    /* 3D Cartoon Button Style */
+    .btn-3d {
+        transition: all 0.1s;
+        border-bottom-width: 6px;
+        transform: translateY(0);
+    }
+    .btn-3d:active:not(:disabled) {
+        border-bottom-width: 0px;
+        transform: translateY(6px);
+        margin-top: 6px;
+    }
+    .btn-3d:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        border-bottom-width: 0;
+        transform: translateY(4px);
+    }
+
+    /* Custom Range Slider */
+    input[type=range] {
+        -webkit-appearance: none;
+        background: transparent;
+    }
+    input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 24px;
+        width: 24px;
+        border-radius: 50%;
+        background: #A78BFA;
+        cursor: pointer;
+        margin-top: -8px; 
+        box-shadow: 0 4px 0 #7C3AED;
+        border: 3px solid white;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 8px;
+        cursor: pointer;
+        background: #E9D5FF;
+        border-radius: 10px;
+    }
+
+    /* Selection Styles */
+    .btn-option:hover {
+        background-color: #F0F9FF;
+        border-color: #38BDF8;
+        transform: scale(1.01);
+    }
+    .btn-option.selected {
+        background-color: #E0F2FE;
+        border-color: #0EA5E9;
+        color: #0369A1;
+        box-shadow: 0 4px 0 #0EA5E9;
+        border-bottom-width: 4px;
+        transform: translateY(-2px);
+    }
+
+    /* Enhanced Progress Bar Styles */
+    .progress-step {
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .progress-line {
+        transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Animation */
+    .pop-in {
+        animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popIn {
+        0% { opacity: 0; transform: scale(0.8); }
+        100% { opacity: 1; transform: scale(1); }
+    }
+</style>
+</head>
+<body class="text-gray-700 min-h-screen flex flex-col">
+
+<!-- Header Nav -->
+<header class="bg-white border-b-4 border-violet-500/20 py-3 px-4 sticky top-0 z-50 shadow-sm">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="bg-violet-500 text-white p-2 rounded-xl rotate-3 shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-xl md:text-2xl font-bold text-gray-800 leading-none">Unit 2: PENGURUS KANTIN</h1>
+                <p class="text-xs text-violet-500 font-medium bg-violet-500/10 px-2 py-0.5 rounded-full inline-block mt-1">Math is Fun!</p>
+            </div>
+        </div>
+        <button onclick="resetSim()" class="btn-3d bg-rose-400 hover:bg-rose-500 text-white border-rose-600 px-4 py-2 rounded-xl text-sm font-bold shadow-md flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span class="hidden sm:inline">Mula Semula</span>
+        </button>
+    </div>
+</header>
+
+<div class="flex-grow max-w-7xl mx-auto w-full p-4 lg:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+    <!-- LAJUR KIRI: STIMULUS -->
+    <div class="lg:col-span-7 space-y-6 flex flex-col">
+        <div class="bg-white p-6 rounded-[2rem] shadow-sm border-4 border-sky-100 flex items-start gap-4 pop-in">
+            <div class="bg-sky-100 p-4 rounded-full text-sky-500 shrink-0 border-2 border-sky-200">
+                <i class="fas fa-rocket text-2xl"></i>
+            </div>
+            <div>
+                <h3 class="font-black text-sky-500 text-lg uppercase mb-1">Misi Anda: Penyelamat Kantin</h3>
+                <p class="text-gray-600 leading-relaxed font-medium">
+                    Hai Kadet! Kantin sekolah kita perlukan bantuan untuk reka kotak minuman "EcoPack". Kita perlu memaksimumkan <strong>Isi Padu</strong> (kapasiti air) sambil meminimumkan <strong>Luas Permukaan</strong> (kos kertas). Guna simulator di bawah untuk cari ukuran prototaip yang paling hebat! 🌟
+                </p>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-[2.5rem] shadow-xl border-4 border-violet-100 overflow-hidden relative">
+            <div class="absolute top-6 left-6 right-6 z-20 flex justify-between pointer-events-none">
+                <div class="bg-white/90 backdrop-blur p-1.5 rounded-2xl border-2 border-violet-100 shadow-sm flex gap-2 pointer-events-auto">
+                    <button onclick="setShape('cylinder')" id="btn-cyl" class="px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition bg-violet-500 text-white shadow-md">
+                        <i class="fas fa-database"></i> Silinder
+                    </button>
+                    <button onclick="setShape('prism')" id="btn-prism" class="px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition text-gray-500 hover:bg-violet-50">
+                        <i class="fas fa-cube"></i> Prisma
+                    </button>
+                </div>
+                <div class="pointer-events-auto">
+                    <button onclick="toggleNet()" id="btn-view" class="btn-3d bg-pink-400 border-pink-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-md transition flex items-center gap-2">
+                        <i class="fas fa-expand-arrows-alt"></i> <span>Buka Kotak</span>
+                    </button>
+                </div>
+            </div>
+
+            <div id="simulation-area" class="h-[450px] relative flex items-center justify-center bg-violet-50/50">
+                <div class="absolute top-20 right-6 text-xs font-bold text-violet-600 bg-white/90 px-3 py-2 rounded-xl border-2 border-violet-200 pointer-events-none shadow-sm">
+                    <div>📏 Dimensi 1: <span id="label-dim1-val" class="text-pink-500 text-lg">5 cm</span></div>
+                    <div>📐 Tinggi: <span id="label-dim2-val" class="text-pink-500 text-lg">10 cm</span></div>
+                </div>
+                <svg id="main-svg" width="450" height="350" viewBox="0 0 400 350" class="z-10 transition-all duration-500">
+                </svg>
+            </div>
+
+            <div class="bg-white p-6 rounded-t-[2rem] border-t-4 border-violet-100 z-30 relative">
+                <div class="grid grid-cols-2 gap-8">
+                    <div>
+                        <div class="flex justify-between items-end mb-3">
+                            <label id="slider-label-1" class="text-sm font-black text-violet-400 uppercase">Jejari (j)</label>
+                            <span id="slider-val-1" class="text-sm font-bold text-white bg-violet-400 px-3 py-1 rounded-lg">5 cm</span>
+                        </div>
+                        <input type="range" id="input-dim1" min="1" max="10" value="5" step="1" oninput="updateSim()">
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-end mb-3">
+                            <label class="text-sm font-black text-violet-400 uppercase">Tinggi (t)</label>
+                            <span id="slider-val-2" class="text-sm font-bold text-white bg-violet-400 px-3 py-1 rounded-lg">10 cm</span>
+                        </div>
+                        <input type="range" id="input-dim2" min="1" max="15" value="10" step="1" oninput="updateSim()">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-[2rem] shadow-lg border-4 border-pink-100 p-6">
+            <h2 class="text-pink-500 font-black uppercase mb-4 flex items-center gap-2">
+                <i class="fas fa-calculator bg-pink-100 p-2 rounded-lg"></i> Analisis Data
+            </h2>
+            <div class="overflow-hidden rounded-2xl border-2 border-pink-100">
+                <table class="w-full text-center">
+                    <thead class="bg-pink-50 text-pink-600 font-bold uppercase text-xs">
+                        <tr>
+                            <th class="p-4">Bentuk</th>
+                            <th class="p-4">Dimensi</th>
+                            <th class="p-4 bg-violet-100 text-violet-600">Isi Padu (V)</th>
+                            <th class="p-4 bg-sky-100 text-sky-600">Luas (L)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white font-bold text-gray-600">
+                        <tr>
+                            <td class="p-4" id="data-shape">Silinder</td>
+                            <td class="p-4 text-xs font-mono bg-gray-50" id="data-dim">j=5, t=10</td>
+                            <td class="p-4 text-violet-600 text-xl"><span id="data-vol">0</span><span class="text-xs ml-1">cm³</span></td>
+                            <td class="p-4 text-sky-600 text-xl"><span id="data-area">0</span><span class="text-xs ml-1">cm²</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-[10px] text-gray-400 mt-2 italic text-right">*Pengiraan menggunakan π ≈ 3.142</p>
+        </div>
+    </div>
+
+    <!-- LAJUR KANAN: ITEM -->
+    <div class="lg:col-span-5 flex flex-col h-full min-h-[900px]">
+        <div id="quiz-card" class="bg-white rounded-[2.5rem] shadow-2xl border-4 border-gray-100 relative overflow-hidden flex flex-col h-full">
+
+            <!-- QUIZ PROGRESS HEADER -->
+            <div class="p-6 pb-6 border-b border-gray-100 bg-white z-20">
+                <div class="flex justify-between items-end mb-4">
+                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Cabaran Minda</span>
+                    <span id="domain-badge" class="bg-teal-100 text-teal-700 text-[10px] font-bold px-2 py-1 rounded-lg shadow-sm">
+                        Mengetahui
+                    </span>
+                </div>
+                
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Item <span id="current-q-num" class="text-violet-500">1</span></h2>
+                    <span class="text-xs font-bold text-violet-500 bg-violet-500/10 px-2 py-1 rounded-full">
+                        Kemajuan: <span id="progress-percent">0</span>%
+                    </span>
+                </div>
+
+                <div class="relative pt-1">
+                    <div class="flex mb-2 items-center justify-between relative">
+                        <div class="absolute left-0 top-1/2 transform -translate-y-1/2 w-full h-1.5 bg-gray-100 rounded-full z-0"></div>
+                        <div id="progress-line" class="absolute left-0 top-1/2 transform -translate-y-1/2 h-1.5 bg-gradient-to-r from-violet-500 to-pink-400 rounded-full z-10 progress-line" style="width: 0%"></div>
+                        
+                        <div class="relative z-20 flex justify-between w-full">
+                            <div id="marker-1" class="w-6 h-6 rounded-full bg-violet-500 text-white text-[10px] font-bold flex items-center justify-center border-2 border-white shadow-md progress-step">1</div>
+                            <div id="marker-2" class="w-6 h-6 rounded-full bg-white text-gray-400 text-[10px] font-bold flex items-center justify-center border-2 border-gray-100 shadow-sm progress-step">2</div>
+                            <div id="marker-3" class="w-6 h-6 rounded-full bg-white text-gray-400 text-[10px] font-bold flex items-center justify-center border-2 border-gray-100 shadow-sm progress-step">3</div>
+                            <div id="marker-4" class="w-6 h-6 rounded-full bg-white text-gray-400 text-[10px] font-bold flex items-center justify-center border-2 border-gray-100 shadow-sm progress-step">4</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Questions Wrapper -->
+            <div id="questions-wrapper" class="p-8 flex-grow overflow-y-auto">
+                
+                <!-- ITEM 1 -->
+                <div id="q1" class="question-block pop-in">
+                    <p class="text-lg font-bold text-gray-700 mb-6 leading-loose">
+                        Tukar paparan simulator kepada mod <span class="bg-pink-100 text-pink-600 px-2 py-1 rounded-lg text-sm border border-pink-200">Buka Kotak</span> untuk Silinder. <br><br>
+                        Manakah antara berikut merupakan komponen bentuk 2D yang betul untuk menghasilkan sebuah silinder tertutup?
+                    </p>
+                    <div class="space-y-4 options-container" data-qid="1">
+                        <button onclick="selectAnswer(1, 'A')" class="btn-option w-full text-left p-5 border-2 border-gray-100 rounded-3xl flex items-center gap-4">
+                            <span class="w-10 h-10 flex shrink-0 items-center justify-center bg-gray-100 rounded-full font-black text-gray-500 option-label">A</span>
+                            <span class="font-bold text-gray-600">1 Bulatan dan 1 Segi Empat Tepat</span>
+                        </button>
+                        <button onclick="selectAnswer(1, 'B')" class="btn-option w-full text-left p-5 border-2 border-gray-100 rounded-3xl flex items-center gap-4">
+                            <span class="w-10 h-10 flex shrink-0 items-center justify-center bg-gray-100 rounded-full font-black text-gray-500 option-label">B</span>
+                            <span class="font-bold text-gray-600">2 Bulatan dan 1 Segi Empat Tepat</span>
+                        </button>
+                        <button onclick="selectAnswer(1, 'C')" class="btn-option w-full text-left p-5 border-2 border-gray-100 rounded-3xl flex items-center gap-4">
+                            <span class="w-10 h-10 flex shrink-0 items-center justify-center bg-gray-100 rounded-full font-black text-gray-500 option-label">C</span>
+                            <span class="font-bold text-gray-600">2 Bulatan dan 1 Segi Tiga</span>
+                        </button>
+                        <button onclick="selectAnswer(1, 'D')" class="btn-option w-full text-left p-5 border-2 border-gray-100 rounded-3xl flex items-center gap-4">
+                            <span class="w-10 h-10 flex shrink-0 items-center justify-center bg-gray-100 rounded-full font-black text-gray-500 option-label">D</span>
+                            <span class="font-bold text-gray-600">1 Bulatan dan 1 Sektor</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ITEM 2 -->
+                <div id="q2" class="question-block hidden pop-in">
+                    <div class="bg-sky-50 p-4 rounded-2xl border-2 border-sky-100 mb-6 text-sky-800 font-medium">
+                        Setkan simulator: <span class="font-bold">Jejari (j) = 7 cm, Tinggi (t) = 10 cm</span>
+                    </div>
+                    <p class="text-lg font-bold text-gray-700 mb-6">
+                        Manakah langkah pengiraan yang betul untuk menentukan isi padu silinder tersebut?
+                        <span class="block text-sm font-normal text-gray-400 mt-2">(Diberi rumus V = πj²t dan π = 22/7)</span>
+                    </p>
+                    <div class="space-y-4 options-container" data-qid="2">
+                        <button onclick="selectAnswer(2, 'A')" class="btn-option w-full text-left p-5 border-2 border-gray-100 rounded-3xl flex items-center gap-4">
+                            <span class="w-10 h-10 flex shrink-0 items-center justify-center bg-gray-100 rounded-full font-black text-gray-500 option-label">A</span>
+                            <span class="font-bold text-gray-600 font-mono">22/7 &times; 7 &times; 10</span>
+                        </button>
+                        <button onclick="selectAnswer(2, 'B')" class="btn-option w-full text-left p-5 border-2 border-gray-100 rounded-3xl flex items-center gap-4">
+                            <span class="w-10 h-10 flex shrink-0 items-center justify-center bg-gray-100 rounded-full font-black text-gray-500 option-label">B</span>
+                            <span class="font-bold text-gray-600 font-mono">22/7 &times; 7² &times; 10</span>
+                        </button>
+                        <button onclick="selectAnswer(2, 'C')" class="btn-option w-full text-left p-5 border-2 border-gray-100 rounded-3xl flex items-center gap-4">
+                            <span class="w-10 h-10 flex shrink-0 items-center justify-center bg-gray-100 rounded-full font-black text-gray-500 option-label">C</span>
+                            <span class="font-bold text-gray-600 font-mono">22/7 &times; 10² &times; 7</span>
+                        </button>
+                        <button onclick="selectAnswer(2, 'D')" class="btn-option w-full text-left p-5 border-2 border-gray-100 rounded-3xl flex items-center gap-4">
+                            <span class="w-10 h-10 flex shrink-0 items-center justify-center bg-gray-100 rounded-full font-black text-gray-500 option-label">D</span>
+                            <span class="font-bold text-gray-600 font-mono">1/3 &times; 22/7 &times; 7² &times; 10</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ITEM 3 -->
+                <div id="q3" class="question-block hidden pop-in">
+                    <p class="text-lg font-bold text-gray-700 mb-6 leading-loose">
+                        Seorang jurutera ingin <strong>menggandakan ketinggian</strong> sebuah silinder (menjadi 2 kali ganda tinggi asal) tanpa mengubah jejarinya. <br><br>
+                        Bagaimanakah ini mempengaruhi Luas Permukaan (kos bahan)?
+                    </p>
+                    <div class="space-y-4 options-container" data-qid="3">
+                        <button onclick="selectAnswer(3, 'A')" class="btn-option w-full text-left p-5 border-2 border-gray-100 rounded-3xl flex items-center gap-4">
+                            <span class="w-10 h-10 flex shrink-0 items-center justify-center bg-gray-100 rounded-full font-black text-gray-500 option-label">A</span>
+                            <span class="font-bold text-gray-600">Luas permukaan akan bertambah tepat dua kali ganda.</span>
+                        </button>
+                        <button onclick="selectAnswer(3, 'B')" class="btn-option w-full text-left p-5 border-2 border-gray-100 rounded-3xl flex items-center gap-4">
+                            <span class="w-10 h-10 flex shrink-0 items-center justify-center bg-gray-100 rounded-full font-black text-gray-500 option-label">B</span>
+                            <span class="font-bold text-gray-600">Luas permukaan tidak akan berubah.</span>
+                        </button>
+                        <button onclick="selectAnswer(3, 'C')" class="btn-option w-full text-left p-5 border-2 border-gray-100 rounded-3xl flex items-center gap-4">
+                            <span class="w-10 h-10 flex shrink-0 items-center justify-center bg-gray-100 rounded-full font-black text-gray-500 option-label">C</span>
+                            <span class="font-bold text-gray-600">Luas permukaan bertambah, tetapi kurang daripada dua kali ganda.</span>
+                        </button>
+                        <button onclick="selectAnswer(3, 'D')" class="btn-option w-full text-left p-5 border-2 border-gray-100 rounded-3xl flex items-center gap-4">
+                            <span class="w-10 h-10 flex shrink-0 items-center justify-center bg-gray-100 rounded-full font-black text-gray-500 option-label">D</span>
+                            <span class="font-bold text-gray-600">Luas permukaan akan bertambah lebih daripada dua kali ganda.</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ITEM 4 (DETAILED) -->
+                <div id="q4" class="question-block hidden pop-in">
+                    <div class="bg-violet-50 p-5 rounded-3xl shadow-sm border border-violet-100 mb-6">
+                        <h3 class="font-black text-violet-900 text-sm uppercase mb-2 flex items-center gap-2">
+                            <i class="fas fa-coins text-yellow-500"></i> Cabaran Optimas: Kos vs Kapasiti
+                        </h3>
+                        <div class="text-sm text-gray-700 space-y-2">
+                            <p>
+                                Syarikat ingin mengeluarkan produk edisi <strong>"Jumbo"</strong>. Ketinggian bekas ditetapkan pada <strong>10 cm</strong>.
+                            </p>
+                            <div class="bg-white/80 p-3 rounded-2xl border border-violet-200 text-xs">
+                                <strong class="block text-violet-800 mb-1">Kekangan Projek:</strong>
+                                <ul class="list-disc ml-4 space-y-1 text-gray-600 font-medium">
+                                    <li>Kos bahan <strong>tidak boleh melebihi RM 5.00</strong> seunit.</li>
+                                    <li>Kadar kos bahan ialah <strong>RM 0.01 per cm²</strong> (Berdasarkan Luas Permukaan).</li>
+                                </ul>
+                            </div>
+                            <p class="mt-2 font-bold text-violet-900">
+                                Misi Anda: Cari dimensi (Jejari/Sisi) yang memberikan <strong>Isi Padu Paling Tinggi</strong> tanpa "pecah bajet".
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- 1. Alat Semak Kos -->
+                        <div class="bg-white border-2 border-gray-100 p-4 rounded-3xl shadow-sm">
+                            <label class="text-[10px] font-black text-gray-400 uppercase block mb-2">1. Alat Penyemak Bajet</label>
+                            <div class="flex items-center gap-2 mb-2">
+                                <input type="number" id="input-area-check" class="flex-grow border-2 border-gray-100 p-2 rounded-xl text-sm font-bold focus:border-violet-400 outline-none" placeholder="Masuk Luas (L)">
+                                <button onclick="checkBudget()" class="bg-gray-800 text-white text-xs px-4 py-2.5 rounded-xl hover:bg-gray-700 transition font-bold shadow-md">Semak Kos</button>
+                            </div>
+                            <div id="budget-result" class="hidden text-xs p-2 rounded-xl border-2 font-bold"></div>
+                        </div>
+
+                        <!-- 2. Rekod Dapatan -->
+                        <div class="bg-white border-2 border-gray-100 p-4 rounded-3xl shadow-sm">
+                            <label class="text-[10px] font-black text-gray-400 uppercase block mb-3">2. Rekod Dapatan Terbaik (H=10cm)</label>
+                            
+                            <!-- Silinder Inputs -->
+                            <div class="grid grid-cols-12 gap-2 items-center mb-3 text-sm">
+                                <div class="col-span-3 font-bold text-violet-600">Silinder</div>
+                                <div class="col-span-4 flex items-center">
+                                    <span class="text-gray-400 text-[10px] mr-1">j=</span>
+                                    <input type="number" id="ans-cyl-j" oninput="validateCurrentStep()" class="w-full border-b-2 border-gray-100 focus:border-violet-500 outline-none text-center font-bold text-violet-600" placeholder="?">
+                                </div>
+                                <div class="col-span-5 flex items-center bg-violet-50 px-2 py-1 rounded-xl">
+                                    <span class="text-violet-400 text-[10px] mr-1">V=</span>
+                                    <input type="number" id="ans-cyl-v" oninput="validateCurrentStep()" class="w-full bg-transparent border-none outline-none text-right font-bold text-violet-900" placeholder="0">
+                                    <span class="text-[10px] ml-1 text-violet-400">cm³</span>
+                                </div>
+                            </div>
+
+                            <!-- Prisma Inputs -->
+                            <div class="grid grid-cols-12 gap-2 items-center text-sm">
+                                <div class="col-span-3 font-bold text-sky-600">Prisma</div>
+                                <div class="col-span-4 flex items-center">
+                                    <span class="text-gray-400 text-[10px] mr-1">s=</span>
+                                    <input type="number" id="ans-prism-s" oninput="validateCurrentStep()" class="w-full border-b-2 border-gray-100 focus:border-sky-500 outline-none text-center font-bold text-sky-600" placeholder="?">
+                                </div>
+                                <div class="col-span-5 flex items-center bg-sky-50 px-2 py-1 rounded-xl">
+                                    <span class="text-sky-400 text-[10px] mr-1">V=</span>
+                                    <input type="number" id="ans-prism-v" oninput="validateCurrentStep()" class="w-full bg-transparent border-none outline-none text-right font-bold text-sky-900" placeholder="0">
+                                    <span class="text-[10px] ml-1 text-sky-400">cm³</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. Kesimpulan -->
+                        <div class="bg-pink-50 border-2 border-pink-100 p-4 rounded-3xl">
+                            <label class="block font-black text-pink-600 text-[10px] uppercase mb-2">3. Kesimpulan Akhir:</label>
+                            <div class="text-xs text-gray-700 space-y-3 font-medium">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span>Bentuk pilihan saya ialah</span>
+                                    <select id="final-choice" onchange="validateCurrentStep()" class="border-2 border-pink-200 p-1 rounded-xl bg-white text-pink-600 font-bold focus:outline-none shadow-sm">
+                                        <option value="">--Pilih--</option>
+                                        <option value="Silinder">Silinder</option>
+                                        <option value="Prisma">Prisma</option>
+                                    </select>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span>kerana ia memberikan tambahan V sebanyak</span>
+                                    <input type="number" id="final-diff" oninput="validateCurrentStep()" class="w-20 border-b-2 border-pink-400 bg-transparent outline-none text-center font-bold text-pink-600" placeholder="0">
+                                    <span>cm³ berbanding bentuk yang lain.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="quiz-complete" class="hidden flex flex-col items-center justify-center h-full text-center py-10 pop-in">
+                    <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6 animate-bounce">
+                        <i class="fas fa-check text-3xl text-green-500"></i>
+                    </div>
+                    <h3 class="text-2xl font-black text-gray-800">Misi Selesai! 🎉</h3>
+                    <p class="text-gray-500 font-medium mb-8">Terima kasih Kadet. Jawapan anda telah direkodkan.</p>
+                    <button onclick="location.reload()" class="btn-3d bg-violet-500 border-violet-700 text-white px-8 py-3 rounded-2xl font-bold shadow-lg">Mula Semula</button>
+                </div>
+            </div>
+
+            <!-- Footer Nav -->
+            <div class="bg-gray-50 p-6 border-t-2 border-gray-100 flex justify-between items-center" id="quiz-nav">
+                <button id="btn-prev" onclick="changeQuestion(-1)" disabled class="btn-3d px-6 py-3 bg-white text-slate-600 border-slate-300 rounded-xl font-bold shadow-md flex items-center disabled:opacity-50">
+                    <i class="fas fa-chevron-left mr-2"></i> Kembali
+                </button>
+                <button id="btn-next" onclick="changeQuestion(1)" disabled class="btn-3d bg-gray-300 border-gray-400 text-white px-8 py-3 rounded-2xl text-sm font-bold flex items-center gap-3">
+                    Seterusnya <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // --- STATE ---
+    let currentShape = 'cylinder'; 
+    let isNetView = false;
+    const state = { cyl: { r: 5, h: 10 }, prism: { l: 6, h: 10 } };
+    let currentQuestion = 1;
+    const totalQuestions = 4;
+    const userAnswers = { 1: null, 2: null, 3: null, 4: false };
+    const questionDomains = { 1: 'Mengetahui', 2: 'Mengaplikasi', 3: 'Menaakul', 4: 'Penyelesaian Masalah' };
+
+    // --- PROGRESS BAR ---
+    function updateProgressBar() {
+        const progressLine = document.getElementById('progress-line');
+        const progressPercentText = document.getElementById('progress-percent');
+        const percentage = ((currentQuestion - 1) / (totalQuestions - 1)) * 100;
+        progressLine.style.width = `${percentage}%`;
+        progressPercentText.innerText = Math.round(percentage);
+
+        for (let i = 1; i <= totalQuestions; i++) {
+            const marker = document.getElementById(`marker-${i}`);
+            if (i < currentQuestion) {
+                marker.classList.remove('bg-white', 'text-gray-400', 'border-gray-100', 'bg-violet-500', 'scale-110');
+                marker.classList.add('bg-green-400', 'text-white', 'border-white', 'scale-90');
+                marker.innerHTML = '<i class="fas fa-check"></i>';
+            } else if (i === currentQuestion) {
+                marker.classList.remove('bg-white', 'text-gray-400', 'border-gray-100', 'bg-green-400', 'scale-90');
+                marker.classList.add('bg-violet-500', 'text-white', 'border-white', 'scale-110');
+                marker.innerHTML = i;
+            } else {
+                marker.classList.remove('bg-violet-500', 'text-white', 'border-white', 'scale-110', 'bg-green-400', 'scale-90');
+                marker.classList.add('bg-white', 'text-gray-400', 'border-gray-100');
+                marker.innerHTML = i;
+            }
+        }
+    }
+
+    // --- SIMULATOR ---
+    function setShape(shape) {
+        currentShape = shape;
+        const btnCyl = document.getElementById('btn-cyl');
+        const btnPrism = document.getElementById('btn-prism');
+        if (shape === 'cylinder') {
+            btnCyl.className = "px-4 py-2 rounded-xl text-xs font-bold transition bg-violet-500 text-white shadow-md";
+            btnPrism.className = "px-4 py-2 rounded-xl text-xs font-bold transition text-gray-500 hover:bg-violet-50";
+            document.getElementById('slider-label-1').innerText = "Jejari (j)";
+            document.getElementById('input-dim1').value = state.cyl.r;
+            document.getElementById('input-dim2').value = state.cyl.h;
+        } else {
+            btnPrism.className = "px-4 py-2 rounded-xl text-xs font-bold transition bg-violet-500 text-white shadow-md";
+            btnCyl.className = "px-4 py-2 rounded-xl text-xs font-bold transition text-gray-500 hover:bg-violet-50";
+            document.getElementById('slider-label-1').innerText = "Sisi (s)";
+            document.getElementById('input-dim1').value = state.prism.l;
+            document.getElementById('input-dim2').value = state.prism.h;
+        }
+        updateSim();
+    }
+
+    function toggleNet() {
+        isNetView = !isNetView;
+        const btn = document.getElementById('btn-view');
+        btn.querySelector('span').innerText = isNetView ? "Tutup Kotak" : "Buka Kotak";
+        draw();
+    }
+
+    function updateSim() {
+        const val1 = parseInt(document.getElementById('input-dim1').value);
+        const val2 = parseInt(document.getElementById('input-dim2').value);
+        if (currentShape === 'cylinder') {
+            state.cyl.r = val1; state.cyl.h = val2;
+        } else {
+            state.prism.l = val1; state.prism.h = val2;
+        }
+        document.getElementById('slider-val-1').innerText = val1 + " cm";
+        document.getElementById('label-dim1-val').innerText = val1 + " cm";
+        document.getElementById('slider-val-2').innerText = val2 + " cm";
+        document.getElementById('label-dim2-val').innerText = val2 + " cm";
+        calculateData();
+        draw();
+    }
+
+    function calculateData() {
+        let vol = 0, area = 0;
+        const PI = 3.142;
+        if (currentShape === 'cylinder') {
+            const r = state.cyl.r, h = state.cyl.h;
+            vol = PI * r * r * h;
+            area = (2 * PI * r * h) + (2 * PI * r * r);
+            document.getElementById('data-shape').innerText = "Silinder";
+            document.getElementById('data-dim').innerText = `j=${r}, t=${h}`;
+        } else {
+            const l = state.prism.l, h = state.prism.h;
+            vol = l * l * h;
+            area = (2 * l * l) + (4 * l * h);
+            document.getElementById('data-shape').innerText = "Prisma";
+            document.getElementById('data-dim').innerText = `s=${l}, t=${h}`;
+        }
+        document.getElementById('data-vol').innerText = vol.toFixed(0);
+        document.getElementById('data-area').innerText = area.toFixed(0);
+    }
+
+    function draw() {
+        const svg = document.getElementById('main-svg');
+        svg.innerHTML = '';
+        const cx = 200;
+        const scale = 10; 
+        const strokeW = 3;
+
+        if (currentShape === 'cylinder') {
+            const r = state.cyl.r * scale, h = state.cyl.h * scale;
+            if (!isNetView) {
+                const cy = 250, tcy = cy - h;
+                svg.innerHTML = `<rect x="${cx-r}" y="${tcy}" width="${r*2}" height="${h}" fill="#DDD6FE" stroke="#8B5CF6" stroke-width="${strokeW}"/>
+                                 <ellipse cx="${cx}" cy="${cy}" rx="${r}" ry="${r*0.4}" fill="#A78BFA" stroke="#8B5CF6" stroke-width="${strokeW}"/>
+                                 <ellipse cx="${cx}" cy="${tcy}" rx="${r}" ry="${r*0.4}" fill="#F3E8FF" stroke="#8B5CF6" stroke-width="${strokeW}"/>`;
+            } else {
+                const rectW = 2 * 3.142 * r;
+                svg.innerHTML = `<rect x="${cx-rectW/2}" y="${100}" width="${rectW}" height="${h}" fill="#DDD6FE" stroke="#8B5CF6" stroke-width="${strokeW}"/>
+                                 <circle cx="${cx}" cy="${100-r}" r="${r}" fill="#F3E8FF" stroke="#8B5CF6" stroke-width="${strokeW}" />
+                                 <circle cx="${cx}" cy="${100+h+r}" r="${r}" fill="#F3E8FF" stroke="#8B5CF6" stroke-width="${strokeW}" />`;
+            }
+        } else {
+            const l = state.prism.l * scale, h = state.prism.h * scale;
+            if (!isNetView) {
+                const x = cx - l/2;
+                const y = 250;
+                const d = l * 0.4;
+                const fbl = [x, y], fbr = [x + l, y], ftl = [x, y - h], ftr = [x + l, y - h];
+                const bbl = [x + d, y - d], bbr = [x + l + d, y - d], btl = [x + d, y - d - h], btr = [x + l + d, y - d - h];
+
+                const hidden = `
+                    <line x1="${bbl[0]}" y1="${bbl[1]}" x2="${bbr[0]}" y2="${bbr[1]}" stroke="#0EA5E9" stroke-width="2" stroke-dasharray="6"/>
+                    <line x1="${bbl[0]}" y1="${bbl[1]}" x2="${btl[0]}" y2="${btl[1]}" stroke="#0EA5E9" stroke-width="2" stroke-dasharray="6"/>
+                    <line x1="${bbl[0]}" y1="${bbl[1]}" x2="${fbl[0]}" y2="${fbl[1]}" stroke="#0EA5E9" stroke-width="2" stroke-dasharray="6"/>
+                `;
+                const sideFace = `<path d="M${ftr[0]},${ftr[1]} L${btr[0]},${btr[1]} L${bbr[0]},${bbr[1]} L${fbr[0]},${fbr[1]} Z" fill="#BAE6FD" stroke="#0EA5E9" stroke-width="${strokeW}"/>`;
+                const topFace = `<path d="M${ftl[0]},${ftl[1]} L${btl[0]},${btl[1]} L${btr[0]},${btr[1]} L${ftr[0]},${ftr[1]} Z" fill="#E0F2FE" stroke="#0EA5E9" stroke-width="${strokeW}"/>`;
+                const frontFace = `<rect x="${ftl[0]}" y="${ftl[1]}" width="${l}" height="${h}" fill="#F0F9FF" stroke="#0EA5E9" stroke-width="${strokeW}"/>`;
+                const depthLines = `
+                    <line x1="${ftl[0]}" y1="${ftl[1]}" x2="${btl[0]}" y2="${btl[1]}" stroke="#0EA5E9" stroke-width="${strokeW}"/>
+                    <line x1="${ftr[0]}" y1="${ftr[1]}" x2="${btr[0]}" y2="${btr[1]}" stroke="#0EA5E9" stroke-width="${strokeW}"/>
+                    <line x1="${fbr[0]}" y1="${fbr[1]}" x2="${bbr[0]}" y2="${bbr[1]}" stroke="#0EA5E9" stroke-width="${strokeW}"/>
+                `;
+                svg.innerHTML = hidden + sideFace + topFace + frontFace + depthLines;
+            } else {
+                svg.innerHTML = `<rect x="${cx-l*2}" y="${150}" width="${l*4}" height="${h}" fill="#F0F9FF" stroke="#0EA5E9" stroke-width="${strokeW}"/>
+                                 <rect x="${cx-l}" y="${150-l}" width="${l}" height="${l}" fill="#E0F2FE" stroke="#0EA5E9" stroke-width="${strokeW}"/>
+                                 <rect x="${cx-l}" y="${150+h}" width="${l}" height="${l}" fill="#E0F2FE" stroke="#0EA5E9" stroke-width="${strokeW}"/>`;
+            }
+        }
+    }
+
+    // --- LOGIK NAVIGASI & VALIDASI ---
+    function validateCurrentStep() {
+        const btnNext = document.getElementById('btn-next');
+        let isValid = false;
+        
+        if (currentQuestion <= 3) {
+            isValid = !!userAnswers[currentQuestion];
+        } else {
+            const v1 = document.getElementById('ans-cyl-v').value;
+            const v2 = document.getElementById('ans-prism-v').value;
+            const choice = document.getElementById('final-choice').value;
+            const diff = document.getElementById('final-diff').value;
+            isValid = !!(v1 && v2 && choice && diff);
+        }
+        
+        if (isValid) {
+            btnNext.disabled = false;
+            btnNext.classList.replace('bg-gray-300', 'bg-violet-500');
+            btnNext.classList.replace('border-gray-400', 'border-violet-700');
+        } else {
+            btnNext.disabled = true;
+            btnNext.classList.replace('bg-violet-500', 'bg-gray-300');
+            btnNext.classList.replace('border-violet-700', 'border-gray-400');
+        }
+    }
+
+    function selectAnswer(qId, choice) {
+        userAnswers[qId] = choice;
+        const btns = document.querySelectorAll(`[data-qid="${qId}"] button`);
+        btns.forEach(b => b.classList.remove('selected'));
+        event.currentTarget.classList.add('selected');
+        validateCurrentStep();
+    }
+
+    function changeQuestion(dir) {
+        const nextQ = currentQuestion + dir;
+        if (nextQ > totalQuestions) {
+            document.getElementById('questions-wrapper').classList.add('hidden');
+            document.getElementById('quiz-complete').classList.remove('hidden');
+            document.getElementById('quiz-nav').classList.add('hidden');
+            return;
+        }
+        document.getElementById(`q${currentQuestion}`).classList.add('hidden');
+        document.getElementById(`q${nextQ}`).classList.remove('hidden');
+        currentQuestion = nextQ;
+        updateQuizUI();
+    }
+
+    function updateQuizUI() {
+        document.getElementById('current-q-num').innerText = currentQuestion;
+        document.getElementById('domain-badge').innerText = questionDomains[currentQuestion];
+        document.getElementById('btn-prev').disabled = currentQuestion === 1;
+        document.getElementById('btn-next').innerHTML = currentQuestion === 4 ? 'Hantar Misi <i class="fas fa-paper-plane"></i>' : 'Seterusnya <i class="fas fa-arrow-right"></i>';
+        updateProgressBar();
+        validateCurrentStep();
+    }
+
+    function checkBudget() {
+        const area = document.getElementById('input-area-check').value;
+        const res = document.getElementById('budget-result');
+        if (!area) return;
+        res.classList.remove('hidden');
+        const cost = area * 0.01;
+        const isOk = cost <= 5;
+        res.innerHTML = isOk ? `<i class="fas fa-check-circle"></i> Lulus Bajet (RM ${cost.toFixed(2)})` : `<i class="fas fa-times-circle"></i> Melebihi Bajet (RM ${cost.toFixed(2)})`;
+        res.className = isOk ? "mt-2 p-2 bg-green-100 text-green-700 rounded-xl border-2 border-green-200 text-xs font-bold" : "mt-2 p-2 bg-red-100 text-red-700 rounded-xl border-2 border-red-200 text-xs font-bold";
+    }
+
+    function resetSim() { location.reload(); }
+
+    updateSim();
+    updateProgressBar();
+</script>
+</body>
+</html>
