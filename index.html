@@ -2,168 +2,183 @@
 <html lang="ms">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Portal Matematik Sekolah Menengah</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Math is Fun - Induk (Login + Unit 1/2/3)</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: sans-serif; background:#f0f2f5; margin:0; }
-    #halaman-utama{ display:none; }
-
-    /* NOTE:
-       Height iframe (85vh) ok untuk web biasa.
-       Bila embed dalam Google Sites, tuan boleh naikkan ke 90vh jika perlu.
-    */
-    iframe{
-      width:100%;
-      height:85vh;
-      border:none;
-      background:white;
-      border-radius:20px;
-    }
+    body{font-family:'Fredoka',sans-serif;background:#fff7fb;}
+    .card{border:3px solid #fce7f3;border-radius:24px;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+    .btn{transition:.1s;border-bottom:5px solid rgba(0,0,0,.2)}
+    .btn:active{transform:translateY(4px);border-bottom:0}
+    iframe{width:100%;height:820px;border:0;border-radius:20px;overflow:hidden;background:#fff}
   </style>
 </head>
 
-<body>
+<body class="min-h-screen p-4 md:p-6">
+  <div class="max-w-7xl mx-auto space-y-6">
 
-  <!-- HEADER ATAS (Sentiasa muncul) -->
-  <header class="w-full bg-gray-900 text-white">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="font-bold tracking-wide">
-        Jabatan Pendidikan Negeri Pahang 2026
+    <!-- HEADER -->
+    <div class="card p-5 md:p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div>
+        <div class="text-sm font-bold text-pink-500">Math is Fun</div>
+        <div class="text-2xl md:text-3xl font-black text-slate-800">Portal Murid (Login Sekali)</div>
+        <div class="text-sm text-slate-500 font-semibold">Unit 1 → Unit 2 → Unit 3 (Jawapan automatik ke Google Sheet)</div>
       </div>
-      <div class="text-xs opacity-80">
-        Portal Interaktif Matematik
+
+      <div class="flex flex-wrap gap-2">
+        <button id="btnUnit1" class="btn px-4 py-2 rounded-xl bg-violet-500 text-white font-bold" onclick="showUnit(1)">Unit 1</button>
+        <button id="btnUnit2" class="btn px-4 py-2 rounded-xl bg-slate-200 text-slate-600 font-bold" onclick="showUnit(2)">Unit 2</button>
+        <button id="btnUnit3" class="btn px-4 py-2 rounded-xl bg-slate-200 text-slate-600 font-bold" onclick="showUnit(3)">Unit 3</button>
+        <button class="btn px-4 py-2 rounded-xl bg-rose-500 text-white font-bold" onclick="resetAll()">Reset</button>
       </div>
     </div>
-  </header>
 
-  <!-- HALAMAN LOGIN -->
-  <div id="halaman-login" class="min-h-[calc(100vh-56px)] flex items-center justify-center p-4">
-    <div class="bg-white p-10 rounded-3xl shadow-2xl w-full max-w-md border-4 border-blue-100 text-center">
-      <h1 class="text-2xl md:text-3xl font-bold mb-2 text-blue-700">Portal Matematik Sekolah Menengah</h1>
-      <p class="text-gray-500 mb-8 text-sm">Sila isi maklumat berikut untuk mula.</p>
-
-      <input type="email" id="stu-email" placeholder="EMEL" class="w-full p-4 border-2 rounded-2xl mb-4 outline-none focus:border-blue-400 font-bold text-center">
-      <input type="text" id="stu-school" placeholder="NAMA SEKOLAH" class="w-full p-4 border-2 rounded-2xl mb-4 outline-none focus:border-blue-400 font-bold uppercase text-center">
-      <input type="text" id="stu-name" placeholder="NAMA MURID" class="w-full p-4 border-2 rounded-2xl mb-4 outline-none focus:border-blue-400 font-bold uppercase text-center">
-      <input type="text" id="stu-class" placeholder="KELAS" class="w-full p-4 border-2 rounded-2xl mb-8 outline-none focus:border-blue-400 font-bold uppercase text-center">
-
-      <button onclick="mula()" class="w-full bg-blue-600 text-white font-bold py-4 rounded-2xl shadow-lg hover:bg-blue-700 transition-all text-xl">
-        MASUK
-      </button>
-
-      <p class="text-xs text-gray-400 mt-6">
-        Pastikan emel & maklumat diisi dengan betul.
-      </p>
-    </div>
-  </div>
-
-  <!-- HALAMAN UTAMA -->
-  <div id="halaman-utama" class="min-h-[calc(100vh-56px)] p-4">
-
-    <nav class="max-w-6xl mx-auto flex flex-col md:flex-row md:justify-between md:items-center gap-3 bg-white p-4 rounded-2xl shadow-md mb-6 border-2 border-blue-50">
-      <div class="flex items-center justify-between">
-        <h2 class="font-bold text-gray-500 uppercase tracking-widest text-xs md:text-sm">Pilih Unit:</h2>
+    <!-- LOGIN -->
+    <div id="loginCard" class="card p-5 md:p-6">
+      <div class="text-lg font-black text-slate-800 mb-3">Login Murid</div>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+        <input id="nama" class="border-2 border-slate-100 rounded-xl p-3 font-bold outline-none focus:border-violet-400" placeholder="Nama Murid">
+        <input id="email" class="border-2 border-slate-100 rounded-xl p-3 font-bold outline-none focus:border-violet-400" placeholder="Email" type="email">
+        <input id="kelas" class="border-2 border-slate-100 rounded-xl p-3 font-bold outline-none focus:border-violet-400" placeholder="Kelas">
+        <input id="sekolah" class="border-2 border-slate-100 rounded-xl p-3 font-bold outline-none focus:border-violet-400" placeholder="Sekolah (opsyen)">
       </div>
+      <div class="mt-4 flex flex-wrap gap-3 items-center">
+        <button class="btn px-6 py-3 rounded-2xl bg-violet-600 text-white font-black" onclick="doLogin()">Masuk</button>
+        <div id="loginInfo" class="text-sm font-bold text-slate-500"></div>
+      </div>
+    </div>
 
-      <!-- PAPAR INFO PENGGUNA -->
-      <div class="bg-blue-700 text-white px-5 py-3 rounded-2xl font-bold shadow-md text-sm leading-tight">
-        <div class="flex items-center gap-2">
-          <span>👤</span>
-          <span id="user-name"></span>
-          <span class="opacity-70">|</span>
-          <span id="user-class"></span>
+    <!-- UNIT AREA -->
+    <div id="unitArea" class="card p-4 md:p-5 hidden">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-3">
+        <div>
+          <div class="text-xs font-black text-slate-400 uppercase tracking-wider">Paparan Unit</div>
+          <div id="unitTitle" class="text-xl font-black text-slate-800">Unit 1</div>
+          <div id="statusLine" class="text-sm font-bold text-slate-500">Status: Menunggu jawapan dihantar…</div>
         </div>
-        <div class="text-xs font-semibold opacity-90 mt-1">
-          🏫 <span id="user-school"></span>
-        </div>
-        <div class="text-xs font-semibold opacity-90">
-          ✉️ <span id="user-email"></span>
+        <div class="text-xs font-bold text-slate-400">
+          *Pastikan Unit 1/2/3 ada kod <span class="text-pink-500">postMessage</span> bila “Hantar/Tamat”.
         </div>
       </div>
-    </nav>
 
-    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-      <button onclick="bukaSim(1)" class="bg-white p-8 rounded-2xl shadow-lg border-b-8 border-amber-500 hover:bg-amber-50 font-bold text-amber-600 text-xl transition-all">
-        UNIT 1: MEJA
-      </button>
-      <button onclick="bukaSim(2)" class="bg-white p-8 rounded-2xl shadow-lg border-b-8 border-violet-500 hover:bg-violet-50 font-bold text-violet-600 text-xl transition-all">
-        UNIT 2: KANTIN
-      </button>
-      <button onclick="bukaSim(3)" class="bg-white p-8 rounded-2xl shadow-lg border-b-8 border-sky-500 hover:bg-sky-50 font-bold text-sky-600 text-xl transition-all">
-        UNIT 3: BARISTA
-      </button>
+      <!-- Tukar src ikut nama fail sebenar tuan -->
+      <div id="frame1Wrap"><iframe id="frame1" src="unit1.html"></iframe></div>
+      <div id="frame2Wrap" class="hidden"><iframe id="frame2" src="unit2.html"></iframe></div>
+      <div id="frame3Wrap" class="hidden"><iframe id="frame3" src="unit3.html"></iframe></div>
     </div>
-
-    <div id="box-sim" class="max-w-6xl mx-auto hidden pb-10">
-      <div class="flex justify-between items-center bg-gray-800 text-white p-4 rounded-t-3xl shadow-lg">
-        <span id="tajuk-sim" class="font-bold uppercase tracking-widest text-sm">Simulasi</span>
-        <button onclick="tutupSim()" class="bg-red-500 px-4 py-2 rounded-xl text-xs font-bold hover:bg-red-700 shadow-md">
-          TUTUP SIMULASI ✖
-        </button>
-      </div>
-      <div id="iframe-place" class="bg-white p-2 rounded-b-3xl shadow-2xl border-x-4 border-b-4 border-gray-800"></div>
-    </div>
-
   </div>
 
   <script>
-    let info = { email:'', sekolah:'', nama:'', kelas:'' };
-    const scriptURL = 'PASTE_URL_WEB_APP_ANDA_SINI'; // letak URL Web App Google Apps Script tuan
+    // ==============================
+    // URL WEB APP APPS SCRIPT (Tuan bagi)
+    // ==============================
+    const scriptURL = "https://script.google.com/macros/s/AKfycbz49OWWMgpAT6gE7pCzMOPJrAYI062bWYog-362qXqxNi_CfIxrD6NJK4-iiVJLnXUsYw/exec";
 
-    function mula(){
-      info.email  = document.getElementById('stu-email').value.trim();
-      info.sekolah= document.getElementById('stu-school').value.trim();
-      info.nama   = document.getElementById('stu-name').value.trim();
-      info.kelas  = document.getElementById('stu-class').value.trim();
+    // ==============================
+    // SIMPAN INFO LOGIN
+    // ==============================
+    const infoMurid = { nama:"", email:"", kelas:"", sekolah:"" };
+    let loggedIn = false;
 
-      if(!info.email || !info.sekolah || !info.nama || !info.kelas){
-        return alert("Sila isi Emel, Nama Sekolah, Nama Murid dan Kelas!");
+    function doLogin(){
+      infoMurid.nama = (document.getElementById("nama").value || "").trim();
+      infoMurid.email = (document.getElementById("email").value || "").trim();
+      infoMurid.kelas = (document.getElementById("kelas").value || "").trim();
+      infoMurid.sekolah = (document.getElementById("sekolah").value || "").trim();
+
+      if(!infoMurid.nama || !infoMurid.email || !infoMurid.kelas){
+        document.getElementById("loginInfo").innerText = "❌ Sila isi Nama, Email dan Kelas.";
+        return;
       }
 
-      // Paparkan pada bar info
-      document.getElementById('user-email').innerText  = info.email;
-      document.getElementById('user-school').innerText = info.sekolah.toUpperCase();
-      document.getElementById('user-name').innerText   = info.nama.toUpperCase();
-      document.getElementById('user-class').innerText  = info.kelas.toUpperCase();
-
-      // Sembunyi login, tunjuk menu
-      document.getElementById('halaman-login').style.display = 'none';
-      document.getElementById('halaman-utama').style.display = 'block';
+      loggedIn = true;
+      document.getElementById("loginInfo").innerText = "✅ Login berjaya. Sila mula Unit 1.";
+      document.getElementById("loginCard").classList.add("hidden");
+      document.getElementById("unitArea").classList.remove("hidden");
+      showUnit(1);
     }
 
-    function bukaSim(n){
-      const list = ["", "Unit 1: Susun Atur Meja", "Unit 2: Pengurus Kantin", "Unit 3: Master Barista"];
-      document.getElementById('tajuk-sim').innerText = list[n];
-      document.getElementById('box-sim').classList.remove('hidden');
-      document.getElementById('iframe-place').innerHTML = `<iframe src="unit${n}.html"></iframe>`;
-      setTimeout(() => { window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); }, 300);
+    function showUnit(n){
+      if(!loggedIn){
+        alert("Sila login dulu.");
+        return;
+      }
+
+      // toggle iframe
+      document.getElementById("frame1Wrap").classList.toggle("hidden", n !== 1);
+      document.getElementById("frame2Wrap").classList.toggle("hidden", n !== 2);
+      document.getElementById("frame3Wrap").classList.toggle("hidden", n !== 3);
+
+      // title
+      document.getElementById("unitTitle").innerText = "Unit " + n;
+      document.getElementById("statusLine").innerText = "Status: Menunggu jawapan dihantar…";
+
+      // button style
+      const b1 = document.getElementById("btnUnit1");
+      const b2 = document.getElementById("btnUnit2");
+      const b3 = document.getElementById("btnUnit3");
+      [b1,b2,b3].forEach(b => b.className = "btn px-4 py-2 rounded-xl bg-slate-200 text-slate-600 font-bold");
+      (n===1?b1:n===2?b2:b3).className = "btn px-4 py-2 rounded-xl bg-violet-500 text-white font-bold";
     }
 
-    function tutupSim(){
-      document.getElementById('box-sim').classList.add('hidden');
-      document.getElementById('iframe-place').innerHTML = '';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    function resetAll(){
+      location.reload();
     }
 
-    // Terima mesej dari unit1/unit2/unit3
-    window.addEventListener('message', function(e){
-      if(e.data && e.data.status === 'TAMAT'){
-        const payload = {
-          ...info,
-          unit: e.data.unit,
-          jawapan: "Telah Selesaikan Simulasi"
-        };
+    // ==============================
+    // HANTAR KE APPS SCRIPT
+    // ==============================
+    async function hantarKeSheet(payload){
+      const status = document.getElementById("statusLine");
+      status.innerText = "Status: Menghantar data ke Google Sheet…";
 
-        // Hantar ke Google Sheet (jika scriptURL dah diisi)
-        if(scriptURL && scriptURL !== 'PASTE_URL_WEB_APP_ANDA_SINI'){
-          fetch(scriptURL, { method:'POST', mode:'no-cors', body: JSON.stringify(payload) });
+      try{
+        const res = await fetch(scriptURL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload)
+        });
+
+        const out = await res.json().catch(()=> ({}));
+        if(!out || out.ok !== true){
+          throw new Error((out && out.error) ? out.error : "Respon bukan ok");
         }
 
-        alert("TAHNIAH " + info.nama.toUpperCase() + "! JAWAPAN " + e.data.unit + " TELAH BERJAYA DIHANTAR.");
+        status.innerText = "✅ Data berjaya disimpan dalam tab: " + out.sheet;
+        return true;
+
+      }catch(err){
+        console.error(err);
+        status.innerText = "❌ Gagal hantar: " + err.message;
+        alert("❌ Gagal hantar ke Google Sheet: " + err.message);
+        return false;
       }
+    }
+
+    // ==============================
+    // TERIMA DATA DARI UNIT (postMessage)
+    // Unit akan hantar: {status:"TAMAT", unit:"UNIT 2", jawapan:{...}}
+    // ==============================
+    window.addEventListener("message", (e) => {
+      if(!e.data) return;
+      if(e.data.status !== "TAMAT") return;
+
+      const unit = (e.data.unit || "").toString().trim();
+      const jawapan = e.data.jawapan || {};
+
+      const payload = {
+        timestamp: new Date().toISOString(),
+        nama: infoMurid.nama,
+        email: infoMurid.email,
+        kelas: infoMurid.kelas,
+        sekolah: infoMurid.sekolah,
+        unit: unit,
+        jawapan: jawapan
+      };
+
+      hantarKeSheet(payload);
     });
   </script>
-
 </body>
 </html>
