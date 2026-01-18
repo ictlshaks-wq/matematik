@@ -639,11 +639,44 @@
     function changeQuestion(dir) {
         const nextQ = currentQuestion + dir;
         if (nextQ > totalQuestions) {
-            document.getElementById('questions-wrapper').classList.add('hidden');
-            document.getElementById('quiz-complete').classList.remove('hidden');
-            document.getElementById('quiz-nav').classList.add('hidden');
-            return;
-        }
+
+  // ✅ KUMPUL JAWAPAN UNIT 2
+  const unit2Payload = {
+    q1: userAnswers[1],           // A/B/C/D
+    q2: userAnswers[2],           // A/B/C/D
+    q3: userAnswers[3],           // A/B/C/D
+    q4: {
+      cyl_j: document.getElementById('ans-cyl-j')?.value || "",
+      cyl_v: document.getElementById('ans-cyl-v')?.value || "",
+      prism_s: document.getElementById('ans-prism-s')?.value || "",
+      prism_v: document.getElementById('ans-prism-v')?.value || "",
+      final_choice: document.getElementById('final-choice')?.value || "",
+      final_diff: document.getElementById('final-diff')?.value || ""
+    },
+    stimulus: {
+      shape: currentShape,
+      isNetView: isNetView,
+      cyl_r: state.cyl.r, cyl_h: state.cyl.h,
+      prism_s: state.prism.l, prism_h: state.prism.h,
+      vol: document.getElementById('data-vol')?.innerText || "",
+      area: document.getElementById('data-area')?.innerText || ""
+    }
+  };
+
+  // ✅ HANTAR KE INDEX (parent)
+  window.parent.postMessage({
+    status: "TAMAT",
+    unit: "UNIT 2",
+    jawapan: unit2Payload
+  }, "*");
+
+  // Papar skrin selesai
+  document.getElementById('questions-wrapper').classList.add('hidden');
+  document.getElementById('quiz-complete').classList.remove('hidden');
+  document.getElementById('quiz-nav').classList.add('hidden');
+  return;
+}
+
         document.getElementById(`q${currentQuestion}`).classList.add('hidden');
         document.getElementById(`q${nextQ}`).classList.remove('hidden');
         currentQuestion = nextQ;
@@ -676,4 +709,5 @@
     updateProgressBar();
 </script>
 </body>
+
 </html>
