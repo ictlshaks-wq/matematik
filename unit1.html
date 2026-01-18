@@ -515,12 +515,15 @@ function submitUnit1(){
             window.addEventListener('resize', renderSim);
         }
 
-        function selectAnswer(qid, opt) {
-            const cont = document.querySelector(`.options-container[data-qid="${qid}"]`);
-            cont.querySelectorAll('.btn-option').forEach(b => b.classList.remove('selected'));
-            event.currentTarget.classList.add('selected');
-            answerState[qid] = true; validateNavigation();
-        }
+function selectAnswer(qid, opt, btn) {
+  const cont = document.querySelector(`.options-container[data-qid="${qid}"]`);
+  cont.querySelectorAll('.btn-option').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+
+  answers[qid] = opt;       // simpan A/B/C/D
+  answerState[qid] = true;
+  validateNavigation();
+}
 
         function calculateGeneric(type) {
             const input = document.getElementById(`input-calc-${type}`);
@@ -587,3 +590,4 @@ function submitUnit1(){
 </body>
 
 </html>
+
