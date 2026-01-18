@@ -554,15 +554,42 @@
     document.getElementById('ans-sirap').addEventListener('input', checkInputQ4);
     document.getElementById('ans-cost').addEventListener('input', checkInputQ4);
 
-    function submitQuiz() {
-      // Tamat sahaja (boleh tambah semakan markah jika mahu)
-      document.getElementById(`q${currentQ}`).classList.add('hidden');
-      document.getElementById('navFooter').classList.add('hidden');
-      document.getElementById('endScreen').classList.remove('hidden');
+function submitQuiz() {
+  // ✅ KUMPUL JAWAPAN UNIT 3
+  const unit3Payload = {
+    q1: answers[1] || null,
+    q2: answers[2] || null,
+    q3: answers[3] || null,
+    q4: {
+      sirap_ml: (document.getElementById('ans-sirap').value || "").trim(),
+      kos_rm: (document.getElementById('ans-cost').value || "").trim()
+    },
+    stimulus: {
+      coffee_ml: parseInt(sliderCoffee.value || "0", 10),
+      milk_ml: parseInt(sliderMilk.value || "0", 10),
+      syrup_ml: parseInt(sliderSyrup.value || "0", 10),
+      total_ml: document.getElementById('totalVol')?.innerText || "",
+      total_cost: document.getElementById('totalCost')?.innerText || "",
+      ratio: document.getElementById('ratioDisplay')?.innerText || ""
     }
+  };
+
+  // ✅ HANTAR KE INDEX (parent)
+  window.parent.postMessage({
+    status: "TAMAT",
+    unit: "UNIT 3",
+    jawapan: unit3Payload
+  }, "*");
+
+  // Papar tamat
+  document.getElementById(`q${currentQ}`).classList.add('hidden');
+  document.getElementById('navFooter').classList.add('hidden');
+  document.getElementById('endScreen').classList.remove('hidden');
+}
 
     // init
     updateNavUI();
   </script>
 </body>
 </html>
+
