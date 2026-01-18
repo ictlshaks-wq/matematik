@@ -62,7 +62,6 @@
         </div>
       </div>
 
-      <!-- Tukar src ikut nama fail sebenar tuan -->
       <div id="frame1Wrap"><iframe id="frame1" src="unit1.html"></iframe></div>
       <div id="frame2Wrap" class="hidden"><iframe id="frame2" src="unit2.html"></iframe></div>
       <div id="frame3Wrap" class="hidden"><iframe id="frame3" src="unit3.html"></iframe></div>
@@ -71,7 +70,7 @@
 
   <script>
     // ==============================
-    // URL WEB APP APPS SCRIPT (Tuan bagi)
+    // URL WEB APP APPS SCRIPT
     // ==============================
     const scriptURL = "https://script.google.com/macros/s/AKfycbz49OWWMgpAT6gE7pCzMOPJrAYI062bWYog-362qXqxNi_CfIxrD6NJK4-iiVJLnXUsYw/exec";
 
@@ -80,6 +79,23 @@
     // ==============================
     const infoMurid = { nama:"", email:"", kelas:"", sekolah:"" };
     let loggedIn = false;
+
+    function buildQS(){
+      return "?nama=" + encodeURIComponent(infoMurid.nama || "")
+        + "&email=" + encodeURIComponent(infoMurid.email || "")
+        + "&kelas=" + encodeURIComponent(infoMurid.kelas || "")
+        + "&sekolah=" + encodeURIComponent(infoMurid.sekolah || "");
+    }
+
+    function setFramesSrc(){
+      const qs = buildQS();
+      const f1 = document.getElementById("frame1");
+      const f2 = document.getElementById("frame2");
+      const f3 = document.getElementById("frame3");
+      if(f1) f1.src = "unit1.html" + qs;
+      if(f2) f2.src = "unit2.html" + qs;
+      if(f3) f3.src = "unit3.html" + qs;
+    }
 
     function doLogin(){
       infoMurid.nama = (document.getElementById("nama").value || "").trim();
@@ -96,19 +112,10 @@
       document.getElementById("loginInfo").innerText = "✅ Login berjaya. Sila mula Unit 1.";
       document.getElementById("loginCard").classList.add("hidden");
       document.getElementById("unitArea").classList.remove("hidden");
-      const nama = infoMurid.nama;
-const email = infoMurid.email;
-const kelas = infoMurid.kelas;
-const sekolah = infoMurid.sekolah;
 
-const url = "unit1.html"
-  + "?nama=" + encodeURIComponent(nama)
-  + "&email=" + encodeURIComponent(email)
-  + "&kelas=" + encodeURIComponent(kelas)
-  + "&sekolah=" + encodeURIComponent(sekolah);
-
-window.location.href = url;
-
+      // ✅ Penting: kekalkan portal, JANGAN redirect keluar
+      setFramesSrc();   // ✅ bagi Unit 1 pun dapat data login
+      showUnit(1);      // ✅ terus paparkan Unit 1
     }
 
     function showUnit(n){
@@ -116,6 +123,9 @@ window.location.href = url;
         alert("Sila login dulu.");
         return;
       }
+
+      // ✅ pastikan bila klik unit lain, iframe ada data login
+      setFramesSrc();
 
       // toggle iframe
       document.getElementById("frame1Wrap").classList.toggle("hidden", n !== 1);
@@ -170,7 +180,7 @@ window.location.href = url;
 
     // ==============================
     // TERIMA DATA DARI UNIT (postMessage)
-    // Unit akan hantar: {status:"TAMAT", unit:"UNIT 2", jawapan:{...}}
+    // Unit akan hantar: {status:"TAMAT", unit:"UNIT 1", jawapan:{...}}
     // ==============================
     window.addEventListener("message", (e) => {
       if(!e.data) return;
@@ -194,4 +204,5 @@ window.location.href = url;
   </script>
 </body>
 </html>
+
 
