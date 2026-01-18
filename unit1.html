@@ -566,14 +566,10 @@ function selectAnswer(qid, opt, btn) {
         function changeQuestion(dir) {
             const next = currentQ + dir;
             if(next > totalQ) {
-                document.getElementById('questions-wrapper').classList.add('hidden');
-                document.getElementById('quiz-nav').classList.add('hidden');
-                document.getElementById('quiz-complete').classList.remove('hidden');
-                document.getElementById('current-q-num').innerText = "-";
-                document.getElementById('progress-line').style.width = '100%';
-                document.getElementById('progress-percent').innerText = "100";
-                return;
-            }
+  submitUnit1();
+  return;
+}
+
             document.getElementById(`q${currentQ}`).classList.add('hidden');
             currentQ = next;
             document.getElementById(`q${currentQ}`).classList.remove('hidden');
@@ -590,5 +586,6 @@ function selectAnswer(qid, opt, btn) {
 </body>
 
 </html>
+
 
 
