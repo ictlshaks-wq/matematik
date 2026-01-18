@@ -1,89 +1,169 @@
 <!DOCTYPE html>
 <html lang="ms">
 <head>
-    <meta charset="UTF-8">
-    <title>Portal Matematik</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { font-family: sans-serif; background: #f0f2f5; margin: 0; }
-        /* Bahagian menu utama disembunyikan pada mulanya */
-        #halaman-utama { display: none; }
-        iframe { width: 100%; height: 85vh; border: none; background: white; border-radius: 20px; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Portal Matematik Sekolah Menengah</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: sans-serif; background:#f0f2f5; margin:0; }
+    #halaman-utama{ display:none; }
+
+    /* NOTE:
+       Height iframe (85vh) ok untuk web biasa.
+       Bila embed dalam Google Sites, tuan boleh naikkan ke 90vh jika perlu.
+    */
+    iframe{
+      width:100%;
+      height:85vh;
+      border:none;
+      background:white;
+      border-radius:20px;
+    }
+  </style>
 </head>
+
 <body>
-    <div id="halaman-login" class="min-h-screen flex items-center justify-center p-4">
-        <div class="bg-white p-10 rounded-3xl shadow-2xl w-full max-w-md border-4 border-blue-100 text-center">
-            <h1 class="text-3xl font-bold mb-8 text-blue-600">Portal Matematik</h1>
-            <input type="text" id="stu-name" placeholder="NAMA PENUH" class="w-full p-4 border-2 rounded-2xl mb-4 outline-none focus:border-blue-400 font-bold uppercase text-center">
-            <input type="text" id="stu-class" placeholder="KELAS" class="w-full p-4 border-2 rounded-2xl mb-8 outline-none focus:border-blue-400 font-bold uppercase text-center">
-            <button onclick="mula()" class="w-full bg-blue-500 text-white font-bold py-4 rounded-2xl shadow-lg hover:bg-blue-600 transition-all text-xl">MASUK</button>
+
+  <!-- HEADER ATAS (Sentiasa muncul) -->
+  <header class="w-full bg-gray-900 text-white">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="font-bold tracking-wide">
+        Jabatan Pendidikan Negeri Pahang 2026
+      </div>
+      <div class="text-xs opacity-80">
+        Portal Interaktif Matematik
+      </div>
+    </div>
+  </header>
+
+  <!-- HALAMAN LOGIN -->
+  <div id="halaman-login" class="min-h-[calc(100vh-56px)] flex items-center justify-center p-4">
+    <div class="bg-white p-10 rounded-3xl shadow-2xl w-full max-w-md border-4 border-blue-100 text-center">
+      <h1 class="text-2xl md:text-3xl font-bold mb-2 text-blue-700">Portal Matematik Sekolah Menengah</h1>
+      <p class="text-gray-500 mb-8 text-sm">Sila isi maklumat berikut untuk mula.</p>
+
+      <input type="email" id="stu-email" placeholder="EMEL" class="w-full p-4 border-2 rounded-2xl mb-4 outline-none focus:border-blue-400 font-bold text-center">
+      <input type="text" id="stu-school" placeholder="NAMA SEKOLAH" class="w-full p-4 border-2 rounded-2xl mb-4 outline-none focus:border-blue-400 font-bold uppercase text-center">
+      <input type="text" id="stu-name" placeholder="NAMA MURID" class="w-full p-4 border-2 rounded-2xl mb-4 outline-none focus:border-blue-400 font-bold uppercase text-center">
+      <input type="text" id="stu-class" placeholder="KELAS" class="w-full p-4 border-2 rounded-2xl mb-8 outline-none focus:border-blue-400 font-bold uppercase text-center">
+
+      <button onclick="mula()" class="w-full bg-blue-600 text-white font-bold py-4 rounded-2xl shadow-lg hover:bg-blue-700 transition-all text-xl">
+        MASUK
+      </button>
+
+      <p class="text-xs text-gray-400 mt-6">
+        Pastikan emel & maklumat diisi dengan betul.
+      </p>
+    </div>
+  </div>
+
+  <!-- HALAMAN UTAMA -->
+  <div id="halaman-utama" class="min-h-[calc(100vh-56px)] p-4">
+
+    <nav class="max-w-6xl mx-auto flex flex-col md:flex-row md:justify-between md:items-center gap-3 bg-white p-4 rounded-2xl shadow-md mb-6 border-2 border-blue-50">
+      <div class="flex items-center justify-between">
+        <h2 class="font-bold text-gray-500 uppercase tracking-widest text-xs md:text-sm">Pilih Unit:</h2>
+      </div>
+
+      <!-- PAPAR INFO PENGGUNA -->
+      <div class="bg-blue-700 text-white px-5 py-3 rounded-2xl font-bold shadow-md text-sm leading-tight">
+        <div class="flex items-center gap-2">
+          <span>👤</span>
+          <span id="user-name"></span>
+          <span class="opacity-70">|</span>
+          <span id="user-class"></span>
         </div>
+        <div class="text-xs font-semibold opacity-90 mt-1">
+          🏫 <span id="user-school"></span>
+        </div>
+        <div class="text-xs font-semibold opacity-90">
+          ✉️ <span id="user-email"></span>
+        </div>
+      </div>
+    </nav>
+
+    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <button onclick="bukaSim(1)" class="bg-white p-8 rounded-2xl shadow-lg border-b-8 border-amber-500 hover:bg-amber-50 font-bold text-amber-600 text-xl transition-all">
+        UNIT 1: MEJA
+      </button>
+      <button onclick="bukaSim(2)" class="bg-white p-8 rounded-2xl shadow-lg border-b-8 border-violet-500 hover:bg-violet-50 font-bold text-violet-600 text-xl transition-all">
+        UNIT 2: KANTIN
+      </button>
+      <button onclick="bukaSim(3)" class="bg-white p-8 rounded-2xl shadow-lg border-b-8 border-sky-500 hover:bg-sky-50 font-bold text-sky-600 text-xl transition-all">
+        UNIT 3: BARISTA
+      </button>
     </div>
 
-    <div id="halaman-utama" class="min-h-screen p-4">
-        <nav class="max-w-6xl mx-auto flex justify-between items-center bg-white p-4 rounded-2xl shadow-md mb-6 border-2 border-blue-50">
-            <h2 class="font-bold text-gray-400 uppercase tracking-widest text-sm">Pilih Unit:</h2>
-            <div class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold shadow-md">
-                👤 <span id="user-info"></span>
-            </div>
-        </nav>
-
-        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <button onclick="bukaSim(1)" class="bg-white p-8 rounded-2xl shadow-lg border-b-8 border-amber-500 hover:bg-amber-50 font-bold text-amber-600 text-xl transition-all">UNIT 1: MEJA</button>
-            <button onclick="bukaSim(2)" class="bg-white p-8 rounded-2xl shadow-lg border-b-8 border-violet-500 hover:bg-violet-50 font-bold text-violet-600 text-xl transition-all">UNIT 2: KANTIN</button>
-            <button onclick="bukaSim(3)" class="bg-white p-8 rounded-2xl shadow-lg border-b-8 border-sky-500 hover:bg-sky-50 font-bold text-sky-600 text-xl transition-all">UNIT 3: BARISTA</button>
-        </div>
-
-        <div id="box-sim" class="max-w-6xl mx-auto hidden pb-10">
-            <div class="flex justify-between items-center bg-gray-800 text-white p-4 rounded-t-3xl shadow-lg">
-                <span id="tajuk-sim" class="font-bold uppercase tracking-widest text-sm">Simulasi</span>
-                <button onclick="tutupSim()" class="bg-red-500 px-4 py-2 rounded-xl text-xs font-bold hover:bg-red-700 shadow-md">TUTUP SIMULASI ✖</button>
-            </div>
-            <div id="iframe-place" class="bg-white p-2 rounded-b-3xl shadow-2xl border-x-4 border-b-4 border-gray-800"></div>
-        </div>
+    <div id="box-sim" class="max-w-6xl mx-auto hidden pb-10">
+      <div class="flex justify-between items-center bg-gray-800 text-white p-4 rounded-t-3xl shadow-lg">
+        <span id="tajuk-sim" class="font-bold uppercase tracking-widest text-sm">Simulasi</span>
+        <button onclick="tutupSim()" class="bg-red-500 px-4 py-2 rounded-xl text-xs font-bold hover:bg-red-700 shadow-md">
+          TUTUP SIMULASI ✖
+        </button>
+      </div>
+      <div id="iframe-place" class="bg-white p-2 rounded-b-3xl shadow-2xl border-x-4 border-b-4 border-gray-800"></div>
     </div>
 
-    <script>
-        let info = { nama: '', kelas: '' };
-        const scriptURL = 'PASTE_URL_WEB_APP_ANDA_SINI'; // Letakkan URL Google Apps Script awak
+  </div>
 
-        function mula() {
-            info.nama = document.getElementById('stu-name').value;
-            info.kelas = document.getElementById('stu-class').value;
-            
-            if(!info.nama || !info.kelas) return alert("Sila isi Nama dan Kelas!");
+  <script>
+    let info = { email:'', sekolah:'', nama:'', kelas:'' };
+    const scriptURL = 'PASTE_URL_WEB_APP_ANDA_SINI'; // letak URL Web App Google Apps Script tuan
 
-            document.getElementById('user-info').innerText = info.nama.toUpperCase() + " | " + info.kelas.toUpperCase();
-            
-            // KOD PENTING: Sembunyikan login, tunjuk menu
-            document.getElementById('halaman-login').style.display = 'none';
-            document.getElementById('halaman-utama').style.display = 'block';
+    function mula(){
+      info.email  = document.getElementById('stu-email').value.trim();
+      info.sekolah= document.getElementById('stu-school').value.trim();
+      info.nama   = document.getElementById('stu-name').value.trim();
+      info.kelas  = document.getElementById('stu-class').value.trim();
+
+      if(!info.email || !info.sekolah || !info.nama || !info.kelas){
+        return alert("Sila isi Emel, Nama Sekolah, Nama Murid dan Kelas!");
+      }
+
+      // Paparkan pada bar info
+      document.getElementById('user-email').innerText  = info.email;
+      document.getElementById('user-school').innerText = info.sekolah.toUpperCase();
+      document.getElementById('user-name').innerText   = info.nama.toUpperCase();
+      document.getElementById('user-class').innerText  = info.kelas.toUpperCase();
+
+      // Sembunyi login, tunjuk menu
+      document.getElementById('halaman-login').style.display = 'none';
+      document.getElementById('halaman-utama').style.display = 'block';
+    }
+
+    function bukaSim(n){
+      const list = ["", "Unit 1: Susun Atur Meja", "Unit 2: Pengurus Kantin", "Unit 3: Master Barista"];
+      document.getElementById('tajuk-sim').innerText = list[n];
+      document.getElementById('box-sim').classList.remove('hidden');
+      document.getElementById('iframe-place').innerHTML = `<iframe src="unit${n}.html"></iframe>`;
+      setTimeout(() => { window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); }, 300);
+    }
+
+    function tutupSim(){
+      document.getElementById('box-sim').classList.add('hidden');
+      document.getElementById('iframe-place').innerHTML = '';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Terima mesej dari unit1/unit2/unit3
+    window.addEventListener('message', function(e){
+      if(e.data && e.data.status === 'TAMAT'){
+        const payload = {
+          ...info,
+          unit: e.data.unit,
+          jawapan: "Telah Selesaikan Simulasi"
+        };
+
+        // Hantar ke Google Sheet (jika scriptURL dah diisi)
+        if(scriptURL && scriptURL !== 'PASTE_URL_WEB_APP_ANDA_SINI'){
+          fetch(scriptURL, { method:'POST', mode:'no-cors', body: JSON.stringify(payload) });
         }
 
-        function bukaSim(n) {
-            const list = ["", "Unit 1: Susun Atur Meja", "Unit 2: Pengurus Kantin", "Unit 3: Master Barista"];
-            document.getElementById('tajuk-sim').innerText = list[n];
-            document.getElementById('box-sim').classList.remove('hidden');
-            document.getElementById('iframe-place').innerHTML = `<iframe src="unit${n}.html"></iframe>`;
-            
-            setTimeout(() => { window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); }, 300);
-        }
+        alert("TAHNIAH " + info.nama.toUpperCase() + "! JAWAPAN " + e.data.unit + " TELAH BERJAYA DIHANTAR.");
+      }
+    });
+  </script>
 
-        function tutupSim() {
-            document.getElementById('box-sim').classList.add('hidden');
-            document.getElementById('iframe-place').innerHTML = '';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // MENERIMA DATA DARI UNIT 1, 2, 3 SECARA AUTOMATIK
-        window.addEventListener('message', function(e) {
-            if(e.data.status === 'TAMAT') {
-                const payload = { ...info, unit: e.data.unit, jawapan: "Telah Selesaikan Simulasi" };
-                fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-                alert("TAHNIAH " + info.nama.toUpperCase() + "! JAWAPAN " + e.data.unit + " TELAH BERJAYA DIHANTAR.");
-            }
-        });
-    </script>
 </body>
 </html>
