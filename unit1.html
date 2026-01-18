@@ -388,6 +388,55 @@
     </div>
 
     <script>
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbz49OWWMgpAT6gE7pCzMOPJrAYI062bWYog-362qXqxNi_CfIxrD6NJK4-iiVJLnXUsYw/exec";
+
+const answers = {}; // simpan jawapan A/B/C/D
+
+function sendToAppsScript(payload){
+  return fetch(WEBAPP_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(payload),
+  })
+  .then(r => r.text())
+  .then(t => { console.log("RESP APPSCRIPT:", t); return t; });
+}
+
+function submitUnit1(){
+  const nama = localStorage.getItem("nama") || "";
+  const email = localStorage.getItem("email") || "";
+  const kelas = localStorage.getItem("kelas") || "";
+  const sekolah = localStorage.getItem("sekolah") || "";
+
+  const pilihan = (document.getElementById("final-choice")?.value || "").trim();
+  const beza = (document.getElementById("final-diff")?.value || "").trim();
+
+  const payload = {
+    unit: "UNIT 1",
+    nama, email, kelas, sekolah,
+    jawapan: {
+      Q1: answers[1] || "",
+      Q2: answers[2] || "",
+      Q3: answers[3] || "",
+      Q4_pilihan: pilihan,
+      Q4_beza: beza
+    }
+  };
+
+  btnNext.disabled = true;
+
+  return sendToAppsScript(payload)
+    .then(() => { showToast("Jawapan Unit 1 dihantar ✅"); })
+    .catch(err => { console.error(err); showToast("Gagal hantar ❌ Semak Internet/URL"); })
+    .finally(() => {
+      document.getElementById('questions-wrapper').classList.add('hidden');
+      document.getElementById('quiz-nav').classList.add('hidden');
+      document.getElementById('quiz-complete').classList.remove('hidden');
+      document.getElementById('current-q-num').innerText = "-";
+      document.getElementById('progress-line').style.width = '100%';
+      document.getElementById('progress-percent').innerText = "100";
+    });
+}
         let tableCount = 1;
         const maxTables = 5;
         let currentQ = 1;
@@ -536,4 +585,5 @@
         init();
     </script>
 </body>
+
 </html>
