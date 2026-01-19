@@ -1,208 +1,349 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ms">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Math is Fun - Induk (Login + Unit 1/2/3)</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" />
+  <meta name="theme-color" content="#2563eb" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>PENTADBIR CHAMPION PBS PAHANG</title>
   <style>
-    body{font-family:'Fredoka',sans-serif;background:#fff7fb;}
-    .card{border:3px solid #fce7f3;border-radius:24px;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,.06)}
-    .btn{transition:.1s;border-bottom:5px solid rgba(0,0,0,.2)}
-    .btn:active{transform:translateY(4px);border-bottom:0}
-    iframe{width:100%;height:820px;border:0;border-radius:20px;overflow:hidden;background:#fff}
+    :root { --bg: #f8fafc; --card: #ffffff; --line: #e2e8f0; --text: #1e293b; --muted: #64748b; --primary: #2563eb; --accent: #f1f5f9; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { margin: 0; font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); padding: 15px; }
+    .container { max-width: 1100px; margin: auto; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05); }
+    h1 { margin: 0 0 4px; font-size: 20px; font-weight: 800; color: #0f172a; line-height: 1.2; }
+    h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 12px; font-weight: 700; }
+    p { margin: 0; color: var(--muted); font-size: 13px; font-weight: 600; }
+
+    .topbar { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+    .btn-row { display:flex; gap:8px; flex-wrap:wrap; }
+
+    .main-layout { display: grid; gap: 20px; grid-template-columns: 1fr; }
+    @media(min-width: 900px) { .main-layout { grid-template-columns: 1fr 400px; } }
+
+    .form-section { display: grid; gap: 16px; }
+    .input-group { background: var(--accent); padding: 16px; border-radius: 12px; border: 1px solid var(--line); }
+    .input-group h3 { margin: 0 0 12px 0; font-size: 14px; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+
+    label { display: block; font-size: 11px; font-weight: 700; margin-bottom: 4px; color: #475569; text-transform: uppercase; }
+    input, select {
+      width: 100%; padding: 14px; border: 1px solid var(--line); border-radius: 10px;
+      font-size: 16px; margin-bottom: 12px; background: white; text-transform: uppercase;
+    }
+    input::placeholder { text-transform: none; }
+    input:last-child { margin-bottom: 0; }
+
+    button { padding: 14px 16px; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; font-size: 14px; transition: all 0.2s; }
+    .btn-main { background: #0f172a; color: white; width: 100%; }
+    .btn-main:active { transform: scale(0.98); background: #1e293b; }
+    .btn-ghost {
+      background: transparent; color: var(--muted); border: 1px solid var(--line);
+      padding: 10px 12px; font-size: 12px; font-weight: 700;
+    }
+    .btn-ghost:hover { background:#fff; color: var(--text); border-color: #94a3b8; }
+
+    .btn-export-small {
+      background: transparent; color: var(--muted); border: 1px solid var(--line);
+      padding: 6px 12px; font-size: 11px; font-weight: 600;
+      margin: 20px auto 40px; display: block; width: fit-content;
+    }
+    .btn-export-small:hover { background: #fff; color: var(--text); border-color: var(--muted); }
+
+    .msg { margin-top: 12px; font-size: 13px; font-weight: 600; text-align: center; min-height: 40px; border-radius: 8px; padding: 10px; display: none; }
+    .msg.show { display: block; }
+    .ok { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+    .err { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+
+    .sidebar { display: flex; flex-direction: column; gap: 16px; }
+    .sidebar-header { border-bottom: 2px solid var(--primary); padding-bottom: 8px; margin-bottom: 12px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+    .sidebar-header h2 { color: var(--primary); margin: 0; font-size: 14px; }
+    .status-pill { font-size: 11px; font-weight: 800; padding: 6px 10px; border-radius: 999px; border:1px solid var(--line); background:#fff; color:#334155; }
+
+    .summary-list { display: flex; flex-direction: column; gap: 12px; }
+    .summary-card { padding: 14px; background: white; border: 1px solid var(--line); border-radius: 12px; font-size: 13px; position: relative; }
+    .summary-card b.district { color: #0f172a; font-size: 14px; display: block; margin-bottom: 10px; background: #f1f5f9; padding: 6px 10px; border-radius: 8px; text-transform: uppercase; }
+
+    .summary-val { margin-top: 12px; color: #334155; border-left: 3px solid var(--primary); padding-left: 10px; position: relative; }
+    .summary-val small { color: var(--muted); font-size: 10px; display: block; font-weight: 700; text-transform: uppercase; margin-bottom: 2px; }
+    .summary-val strong { font-size: 13px; color: #0f172a; display: block; line-height: 1.4; text-transform: uppercase; }
+
+    .btn-del-mini {
+      padding: 8px; font-size: 10px; color: #ef4444; background: #fff1f2;
+      border-radius: 6px; border: none; cursor: pointer; position: absolute;
+      top: 10px; right: 10px; font-weight: 900;
+    }
+    .btn-del-mini:active { background: #fecaca; }
   </style>
 </head>
+<body>
 
-<body class="min-h-screen p-4 md:p-6">
-  <div class="max-w-7xl mx-auto space-y-6">
-
-    <!-- HEADER -->
-    <div class="card p-5 md:p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+<div class="container">
+  <div class="card">
+    <div class="topbar">
       <div>
-        <div class="text-sm font-bold text-pink-500">Math is Fun</div>
-        <div class="text-2xl md:text-3xl font-black text-slate-800">Portal Murid (Login Sekali)</div>
-        <div class="text-sm text-slate-500 font-semibold">Unit 1 → Unit 2 → Unit 3 (Jawapan automatik ke Google Sheet)</div>
+        <h1>PENTADBIR CHAMPION PBS PAHANG</h1>
+        <p>Sektor Pembelajaran, JPN Pahang 2026</p>
       </div>
-
-      <div class="flex flex-wrap gap-2">
-        <button id="btnUnit1" class="btn px-4 py-2 rounded-xl bg-violet-500 text-white font-bold" onclick="showUnit(1)">Unit 1</button>
-        <button id="btnUnit2" class="btn px-4 py-2 rounded-xl bg-slate-200 text-slate-600 font-bold" onclick="showUnit(2)">Unit 2</button>
-        <button id="btnUnit3" class="btn px-4 py-2 rounded-xl bg-slate-200 text-slate-600 font-bold" onclick="showUnit(3)">Unit 3</button>
-        <button class="btn px-4 py-2 rounded-xl bg-rose-500 text-white font-bold" onclick="resetAll()">Reset</button>
+      <div class="btn-row">
+        <button class="btn-ghost" onclick="manualRefresh()">Refresh</button>
+        <button class="btn-ghost" id="btnAuto" onclick="toggleAuto()">Auto: ON</button>
       </div>
-    </div>
-
-    <!-- LOGIN -->
-    <div id="loginCard" class="card p-5 md:p-6">
-      <div class="text-lg font-black text-slate-800 mb-3">Login Murid</div>
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-        <input id="nama" class="border-2 border-slate-100 rounded-xl p-3 font-bold outline-none focus:border-violet-400" placeholder="Nama Murid">
-        <input id="email" class="border-2 border-slate-100 rounded-xl p-3 font-bold outline-none focus:border-violet-400" placeholder="Email" type="email">
-        <input id="kelas" class="border-2 border-slate-100 rounded-xl p-3 font-bold outline-none focus:border-violet-400" placeholder="Kelas">
-        <input id="sekolah" class="border-2 border-slate-100 rounded-xl p-3 font-bold outline-none focus:border-violet-400" placeholder="Sekolah (opsyen)">
-      </div>
-      <div class="mt-4 flex flex-wrap gap-3 items-center">
-        <button class="btn px-6 py-3 rounded-2xl bg-violet-600 text-white font-black" onclick="doLogin()">Masuk</button>
-        <div id="loginInfo" class="text-sm font-bold text-slate-500"></div>
-      </div>
-    </div>
-
-    <!-- UNIT AREA -->
-    <div id="unitArea" class="card p-4 md:p-5 hidden">
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-3">
-        <div>
-          <div class="text-xs font-black text-slate-400 uppercase tracking-wider">Paparan Unit</div>
-          <div id="unitTitle" class="text-xl font-black text-slate-800">Unit 1</div>
-          <div id="statusLine" class="text-sm font-bold text-slate-500">Status: Menunggu jawapan dihantar…</div>
-        </div>
-        <div class="text-xs font-bold text-slate-400">
-          *Pastikan Unit 1/2/3 ada kod <span class="text-pink-500">postMessage</span> bila “Hantar/Tamat”.
-        </div>
-      </div>
-
-      <div id="frame1Wrap"><iframe id="frame1" src="unit1.html"></iframe></div>
-      <div id="frame2Wrap" class="hidden"><iframe id="frame2" src="unit2.html"></iframe></div>
-      <div id="frame3Wrap" class="hidden"><iframe id="frame3" src="unit3.html"></iframe></div>
     </div>
   </div>
 
-  <script>
-    // ==============================
-    // URL WEB APP APPS SCRIPT
-    // ==============================
-    const scriptURL = "https://script.google.com/macros/s/AKfycbz49OWWMgpAT6gE7pCzMOPJrAYI062bWYog-362qXqxNi_CfIxrD6NJK4-iiVJLnXUsYw/exec";
+  <div class="main-layout">
+    <div class="card">
+      <h2>Borang Pendaftaran</h2>
+      <div class="form-section">
+        <div>
+          <label>Pilih Daerah (PPD)</label>
+          <select id="ppd">
+            <option value="">-- Pilih PPD --</option>
+            <option>PPD Kuantan</option>
+            <option>PPD Pekan</option>
+            <option>PPD Rompin</option>
+            <option>PPD Temerloh</option>
+            <option>PPD Bera</option>
+            <option>PPD Maran</option>
+            <option>PPD Bentong</option>
+            <option>PPD Lipis</option>
+            <option>PPD Raub</option>
+            <option>PPD Jerantut</option>
+            <option>PPD Cameron Highlands</option>
+          </select>
+        </div>
 
-    // ==============================
-    // SIMPAN INFO LOGIN
-    // ==============================
-    const infoMurid = { nama:"", email:"", kelas:"", sekolah:"" };
-    let loggedIn = false;
+        <div class="input-group">
+          <h3>🏫 Sekolah Rendah</h3>
+          <label>Nama Sekolah Rendah</label>
+          <input type="text" id="sekolahSR" placeholder="Contoh: SK Pelabuhan">
+          <label>Nama Guru Besar</label>
+          <input type="text" id="gb" placeholder="Nama penuh">
+        </div>
 
-    function buildQS(){
-      return "?nama=" + encodeURIComponent(infoMurid.nama || "")
-        + "&email=" + encodeURIComponent(infoMurid.email || "")
-        + "&kelas=" + encodeURIComponent(infoMurid.kelas || "")
-        + "&sekolah=" + encodeURIComponent(infoMurid.sekolah || "");
-    }
+        <div class="input-group">
+          <h3>🏫 Sekolah Menengah</h3>
+          <label>Nama Sekolah Menengah</label>
+          <input type="text" id="sekolahSM" placeholder="Contoh: SMK Pelabuhan">
+          <label>Nama Pengetua</label>
+          <input type="text" id="pg" placeholder="Nama penuh">
+        </div>
 
-    function setFramesSrc(){
-      const qs = buildQS();
-      const f1 = document.getElementById("frame1");
-      const f2 = document.getElementById("frame2");
-      const f3 = document.getElementById("frame3");
-      if(f1) f1.src = "unit1.html" + qs;
-      if(f2) f2.src = "unit2.html" + qs;
-      if(f3) f3.src = "unit3.html" + qs;
-    }
+        <button class="btn-main" onclick="simpan()">Simpan / Kemaskini Rekod (ikut PPD)</button>
+        <div id="msg" class="msg"></div>
+      </div>
+    </div>
 
-    function doLogin(){
-      infoMurid.nama = (document.getElementById("nama").value || "").trim();
-      infoMurid.email = (document.getElementById("email").value || "").trim();
-      infoMurid.kelas = (document.getElementById("kelas").value || "").trim();
-      infoMurid.sekolah = (document.getElementById("sekolah").value || "").trim();
+    <div class="sidebar">
+      <div class="card">
+        <div class="sidebar-header">
+          <h2>Senarai Terkini (Live)</h2>
+          <span class="status-pill" id="status">Menghubung…</span>
+        </div>
 
-      if(!infoMurid.nama || !infoMurid.email || !infoMurid.kelas){
-        document.getElementById("loginInfo").innerText = "❌ Sila isi Nama, Email dan Kelas.";
-        return;
-      }
+        <div id="summaryList" class="summary-list"></div>
+        <div id="summaryEmpty" style="font-size: 13px; color: var(--muted); text-align: center; padding: 20px;">
+          Tiada data didaftarkan.
+        </div>
+      </div>
+    </div>
+  </div>
 
-      loggedIn = true;
-      document.getElementById("loginInfo").innerText = "✅ Login berjaya. Sila mula Unit 1.";
-      document.getElementById("loginCard").classList.add("hidden");
-      document.getElementById("unitArea").classList.remove("hidden");
+  <button class="btn-export-small" onclick="exportCSV()">Eksport Data (CSV)</button>
+</div>
 
-      // ✅ Penting: kekalkan portal, JANGAN redirect keluar
-      setFramesSrc();   // ✅ bagi Unit 1 pun dapat data login
-      showUnit(1);      // ✅ terus paparkan Unit 1
-    }
+<script>
+  // ======= WAJIB TUKAR URL INI =======
+  const WEB_APP_URL = "PASTE_URL_WEB_APP_DI_SINI"; // contoh: https://script.google.com/macros/s/AKfycbxxxx/exec
 
-    function showUnit(n){
-      if(!loggedIn){
-        alert("Sila login dulu.");
-        return;
-      }
+  let CACHE = [];         // simpan data terakhir untuk export CSV
+  let AUTO_ON = true;
+  let AUTO_TIMER = null;
 
-      // ✅ pastikan bila klik unit lain, iframe ada data login
-      setFramesSrc();
+  function showMsg(text, type) {
+    const msg = document.getElementById('msg');
+    msg.textContent = text;
+    msg.className = `msg show ${type}`;
+    setTimeout(() => { msg.className = "msg"; }, 4000);
+  }
 
-      // toggle iframe
-      document.getElementById("frame1Wrap").classList.toggle("hidden", n !== 1);
-      document.getElementById("frame2Wrap").classList.toggle("hidden", n !== 2);
-      document.getElementById("frame3Wrap").classList.toggle("hidden", n !== 3);
+  async function apiGetAll() {
+    const res = await fetch(WEB_APP_URL, { method: "GET" });
+    const json = await res.json();
+    if (!json.ok) throw new Error(json.message || "Gagal ambil data");
+    return json.data || [];
+  }
 
-      // title
-      document.getElementById("unitTitle").innerText = "Unit " + n;
-      document.getElementById("statusLine").innerText = "Status: Menunggu jawapan dihantar…";
-
-      // button style
-      const b1 = document.getElementById("btnUnit1");
-      const b2 = document.getElementById("btnUnit2");
-      const b3 = document.getElementById("btnUnit3");
-      [b1,b2,b3].forEach(b => b.className = "btn px-4 py-2 rounded-xl bg-slate-200 text-slate-600 font-bold");
-      (n===1?b1:n===2?b2:b3).className = "btn px-4 py-2 rounded-xl bg-violet-500 text-white font-bold";
-    }
-
-    function resetAll(){
-      location.reload();
-    }
-
-    // ==============================
-    // HANTAR KE APPS SCRIPT
-    // ==============================
-    async function hantarKeSheet(payload){
-      const status = document.getElementById("statusLine");
-      status.innerText = "Status: Menghantar data ke Google Sheet…";
-
-      try{
-        const res = await fetch(scriptURL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify(payload)
-        });
-
-        const out = await res.json().catch(()=> ({}));
-        if(!out || out.ok !== true){
-          throw new Error((out && out.error) ? out.error : "Respon bukan ok");
-        }
-
-        status.innerText = "✅ Data berjaya disimpan dalam tab: " + out.sheet;
-        return true;
-
-      }catch(err){
-        console.error(err);
-        status.innerText = "❌ Gagal hantar: " + err.message;
-        alert("❌ Gagal hantar ke Google Sheet: " + err.message);
-        return false;
-      }
-    }
-
-    // ==============================
-    // TERIMA DATA DARI UNIT (postMessage)
-    // Unit akan hantar: {status:"TAMAT", unit:"UNIT 1", jawapan:{...}}
-    // ==============================
-    window.addEventListener("message", (e) => {
-      if(!e.data) return;
-      if(e.data.status !== "TAMAT") return;
-
-      const unit = (e.data.unit || "").toString().trim();
-      const jawapan = e.data.jawapan || {};
-
-      const payload = {
-        timestamp: new Date().toISOString(),
-        nama: infoMurid.nama,
-        email: infoMurid.email,
-        kelas: infoMurid.kelas,
-        sekolah: infoMurid.sekolah,
-        unit: unit,
-        jawapan: jawapan
-      };
-
-      hantarKeSheet(payload);
+  async function apiUpsert(payload) {
+    const res = await fetch(WEB_APP_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "upsert", ...payload })
     });
-  </script>
+    const json = await res.json();
+    if (!json.ok) throw new Error(json.message || "Gagal simpan");
+    return json;
+  }
+
+  async function apiDelete(ppd) {
+    const res = await fetch(WEB_APP_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "delete", ppd })
+    });
+    const json = await res.json();
+    if (!json.ok) throw new Error(json.message || "Gagal padam");
+    return json;
+  }
+
+  async function simpan() {
+    const ppd = document.getElementById('ppd').value.trim();
+    const sekolahSR = document.getElementById('sekolahSR').value.trim().toUpperCase();
+    const gb = document.getElementById('gb').value.trim().toUpperCase();
+    const sekolahSM = document.getElementById('sekolahSM').value.trim().toUpperCase();
+    const pg = document.getElementById('pg').value.trim().toUpperCase();
+
+    if(!ppd || !sekolahSR || !gb || !sekolahSM || !pg) {
+      showMsg("⚠️ Sila isi semua ruangan!", "err");
+      return;
+    }
+
+    try{
+      document.getElementById("status").textContent = "Menyimpan…";
+      const out = await apiUpsert({ ppd, sekolahSR, gb, sekolahSM, pg });
+
+      document.getElementById('sekolahSR').value = "";
+      document.getElementById('gb').value = "";
+      document.getElementById('sekolahSM').value = "";
+      document.getElementById('pg').value = "";
+
+      showMsg("✅ " + out.message, "ok");
+      await render();
+    }catch(err){
+      showMsg("❌ Ralat: " + err.message, "err");
+      document.getElementById("status").textContent = "Ralat";
+    }
+  }
+
+  async function deletePPD(ppd) {
+    if(!confirm(`Padam rekod untuk ${ppd}?`)) return;
+    try{
+      document.getElementById("status").textContent = "Memadam…";
+      const out = await apiDelete(ppd);
+      showMsg("🗑️ " + out.message, "ok");
+      await render();
+    }catch(err){
+      showMsg("❌ Ralat padam: " + err.message, "err");
+      document.getElementById("status").textContent = "Ralat";
+    }
+  }
+
+  function exportCSV() {
+    const data = CACHE || [];
+    if (data.length === 0) {
+      showMsg("⚠️ Tiada data untuk dieksport!", "err");
+      return;
+    }
+
+    let csvContent = "DAERAH,SEKOLAH RENDAH,GURU BESAR,SEKOLAH MENENGAH,PENGETUA,UPDATED_AT\n";
+    data.forEach(item => {
+      const row = [
+        item.ppd || "",
+        item.sekolahSR || "",
+        item.gb || "",
+        item.sekolahSM || "",
+        item.pg || "",
+        item.updatedAt || ""
+      ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(",");
+      csvContent += row + "\n";
+    });
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `pendaftaran-champion-pbs-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  async function render() {
+    const summaryList = document.getElementById('summaryList');
+    const summaryEmpty = document.getElementById('summaryEmpty');
+
+    try{
+      document.getElementById("status").textContent = "Mengambil data…";
+      const data = await apiGetAll();
+      CACHE = data;
+
+      summaryList.innerHTML = "";
+      const ppdsFilled = [...new Set(data.map(i => (i.ppd || "").toString().trim()).filter(Boolean))].sort();
+
+      if(ppdsFilled.length === 0) {
+        summaryEmpty.style.display = "block";
+        summaryEmpty.textContent = "Tiada data didaftarkan.";
+      } else {
+        summaryEmpty.style.display = "none";
+
+        ppdsFilled.forEach(ppdName => {
+          const entries = data.filter(i => i.ppd === ppdName);
+
+          const card = document.createElement('div');
+          card.className = "summary-card";
+
+          // 1 rekod per PPD (tetapi kalau ada lebih, tetap papar semua)
+          let schoolsHtml = entries.map(e => `
+            <div class="summary-val">
+              <button class="btn-del-mini" onclick="deletePPD('${ppdName.replace(/'/g, "\\'")}')">Padam</button>
+              <small>${(e.sekolahSR || "-")}</small>
+              <strong>GB: ${(e.gb || "-")}</strong>
+              <small style="margin-top:8px">${(e.sekolahSM || "-")}</small>
+              <strong>PG: ${(e.pg || "-")}</strong>
+              <small style="margin-top:10px">KEMASKINI: ${(e.updatedAt || "-")}</small>
+            </div>
+          `).join('');
+
+          card.innerHTML = `<b class="district">📍 ${ppdName}</b>${schoolsHtml}`;
+          summaryList.appendChild(card);
+        });
+      }
+
+      document.getElementById("status").textContent = "Live";
+    }catch(err){
+      summaryList.innerHTML = "";
+      summaryEmpty.style.display = "block";
+      summaryEmpty.textContent = "Ralat ambil data: " + err.message;
+      document.getElementById("status").textContent = "Ralat";
+    }
+  }
+
+  function manualRefresh(){
+    render();
+  }
+
+  function startAuto(){
+    stopAuto();
+    AUTO_TIMER = setInterval(render, 8000); // 8 saat
+  }
+
+  function stopAuto(){
+    if(AUTO_TIMER) clearInterval(AUTO_TIMER);
+    AUTO_TIMER = null;
+  }
+
+  function toggleAuto(){
+    AUTO_ON = !AUTO_ON;
+    document.getElementById("btnAuto").textContent = AUTO_ON ? "Auto: ON" : "Auto: OFF";
+    if(AUTO_ON) startAuto(); else stopAuto();
+  }
+
+  // mula
+  render();
+  startAuto();
+</script>
+
 </body>
 </html>
-
 
