@@ -62,20 +62,21 @@
         </div>
       </div>
 
-      <!-- Tukar src ikut nama fail sebenar tuan -->
       <div id="frame1Wrap"><iframe id="frame1" src="unit1.html"></iframe></div>
       <div id="frame2Wrap" class="hidden"><iframe id="frame2" src="unit2.html"></iframe></div>
       <div id="frame3Wrap" class="hidden"><iframe id="frame3" src="unit3.html"></iframe></div>
-@@ -71,7 +70,7 @@
+    </div>
+  </div>
 
   <script>
     // ==============================
-    // URL WEB APP APPS SCRIPT (Tuan bagi)
     // URL WEB APP APPS SCRIPT
     // ==============================
     const scriptURL = "https://script.google.com/macros/s/AKfycbz49OWWMgpAT6gE7pCzMOPJrAYI062bWYog-362qXqxNi_CfIxrD6NJK4-iiVJLnXUsYw/exec";
 
-@@ -81,6 +80,23 @@
+    // ==============================
+    // SIMPAN INFO LOGIN
+    // ==============================
     const infoMurid = { nama:"", email:"", kelas:"", sekolah:"" };
     let loggedIn = false;
 
@@ -99,22 +100,18 @@
     function doLogin(){
       infoMurid.nama = (document.getElementById("nama").value || "").trim();
       infoMurid.email = (document.getElementById("email").value || "").trim();
-@@ -96,19 +112,10 @@
+      infoMurid.kelas = (document.getElementById("kelas").value || "").trim();
+      infoMurid.sekolah = (document.getElementById("sekolah").value || "").trim();
+
+      if(!infoMurid.nama || !infoMurid.email || !infoMurid.kelas){
+        document.getElementById("loginInfo").innerText = "❌ Sila isi Nama, Email dan Kelas.";
+        return;
+      }
+
+      loggedIn = true;
       document.getElementById("loginInfo").innerText = "✅ Login berjaya. Sila mula Unit 1.";
       document.getElementById("loginCard").classList.add("hidden");
       document.getElementById("unitArea").classList.remove("hidden");
-      const nama = infoMurid.nama;
-const email = infoMurid.email;
-const kelas = infoMurid.kelas;
-const sekolah = infoMurid.sekolah;
-
-const url = "unit1.html"
-  + "?nama=" + encodeURIComponent(nama)
-  + "&email=" + encodeURIComponent(email)
-  + "&kelas=" + encodeURIComponent(kelas)
-  + "&sekolah=" + encodeURIComponent(sekolah);
-
-window.location.href = url;
 
       // ✅ Penting: kekalkan portal, JANGAN redirect keluar
       setFramesSrc();   // ✅ bagi Unit 1 pun dapat data login
@@ -122,7 +119,8 @@ window.location.href = url;
     }
 
     function showUnit(n){
-@@ -117,6 +124,9 @@
+      if(!loggedIn){
+        alert("Sila login dulu.");
         return;
       }
 
@@ -132,15 +130,77 @@ window.location.href = url;
       // toggle iframe
       document.getElementById("frame1Wrap").classList.toggle("hidden", n !== 1);
       document.getElementById("frame2Wrap").classList.toggle("hidden", n !== 2);
-@@ -170,7 +180,7 @@
+      document.getElementById("frame3Wrap").classList.toggle("hidden", n !== 3);
+
+      // title
+      document.getElementById("unitTitle").innerText = "Unit " + n;
+      document.getElementById("statusLine").innerText = "Status: Menunggu jawapan dihantar…";
+
+      // button style
+      const b1 = document.getElementById("btnUnit1");
+      const b2 = document.getElementById("btnUnit2");
+      const b3 = document.getElementById("btnUnit3");
+      [b1,b2,b3].forEach(b => b.className = "btn px-4 py-2 rounded-xl bg-slate-200 text-slate-600 font-bold");
+      (n===1?b1:n===2?b2:b3).className = "btn px-4 py-2 rounded-xl bg-violet-500 text-white font-bold";
+    }
+
+    function resetAll(){
+      location.reload();
+    }
+
+    // ==============================
+    // HANTAR KE APPS SCRIPT
+    // ==============================
+    async function hantarKeSheet(payload){
+      const status = document.getElementById("statusLine");
+      status.innerText = "Status: Menghantar data ke Google Sheet…";
+
+      try{
+        const res = await fetch(scriptURL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload)
+        });
+
+        const out = await res.json().catch(()=> ({}));
+        if(!out || out.ok !== true){
+          throw new Error((out && out.error) ? out.error : "Respon bukan ok");
+        }
+
+        status.innerText = "✅ Data berjaya disimpan dalam tab: " + out.sheet;
+        return true;
+
+      }catch(err){
+        console.error(err);
+        status.innerText = "❌ Gagal hantar: " + err.message;
+        alert("❌ Gagal hantar ke Google Sheet: " + err.message);
+        return false;
+      }
+    }
 
     // ==============================
     // TERIMA DATA DARI UNIT (postMessage)
-    // Unit akan hantar: {status:"TAMAT", unit:"UNIT 2", jawapan:{...}}
     // Unit akan hantar: {status:"TAMAT", unit:"UNIT 1", jawapan:{...}}
     // ==============================
     window.addEventListener("message", (e) => {
       if(!e.data) return;
-@@ -195,3 +205,4 @@
+      if(e.data.status !== "TAMAT") return;
+
+      const unit = (e.data.unit || "").toString().trim();
+      const jawapan = e.data.jawapan || {};
+
+      const payload = {
+        timestamp: new Date().toISOString(),
+        nama: infoMurid.nama,
+        email: infoMurid.email,
+        kelas: infoMurid.kelas,
+        sekolah: infoMurid.sekolah,
+        unit: unit,
+        jawapan: jawapan
+      };
+
+      hantarKeSheet(payload);
+    });
+  </script>
 </body>
 </html>
